@@ -50,8 +50,8 @@ void Engine::run() {
             accumulator -= PHYSICS_STEP;
         }
 
-       keyboardInput->processInput();
-     
+       
+        keyboardInput->processInput();
         mouseInput->proccessInput();
         ui->processInput();
         renderer->render();
@@ -65,6 +65,7 @@ void Engine::run() {
             std::cout << "FPS: " << framesThisSecond << "\n";
             framesThisSecond = 0;
             timeSinceLastFpsPrint = 0.0f;
+
         }
     }
 }

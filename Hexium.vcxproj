@@ -157,7 +157,6 @@
     <ClCompile Include="source\libraries\stb.cpp" />
     <ClCompile Include="source\render\Camera.cpp" />
     <ClCompile Include="source\render\Renderer.cpp" />
-    <ClCompile Include="source\render\RenderHelpers\containers\VAO.cpp" />
     <ClCompile Include="source\render\RenderHelpers\Shader.cpp" />
     <ClCompile Include="source\shapes\RigidBody.cpp" />
     <ClCompile Include="source\utils\ObjectLoader.cpp" />
@@ -180,6 +179,7 @@
     <ClInclude Include="source\graphics\StaticMesh.h" />
     <ClInclude Include="source\graphics\Texture.h" />
     <ClInclude Include="source\graphics\TextureManager.h" />
+    <ClInclude Include="source\graphics\Vertex.h" />
     <ClInclude Include="source\input\KeyBoardInput.h" />
     <ClInclude Include="source\input\MouseInput.h" />
     <ClInclude Include="source\input\UIInput.h" />
@@ -216,6 +216,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resource\textures\crate.jpg">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </Image>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,7 +15,7 @@ public:
         EBO1 = new EBO(const_cast<GLuint*>(ind.data()), ind.size() * sizeof(unsigned int), false);
 
         VAO1->Bind();
-        VAO1->LinkVBO(VBO1, 0);
+     //   VAO1->LinkVBO(VBO1, 0);
         VAO1->Unbind();
     }
 

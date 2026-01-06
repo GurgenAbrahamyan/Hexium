@@ -46,20 +46,63 @@ public:
         }
 
 
-        std::vector< int> indices = {
-            0,1,2, 2,3,0,
-            4,5,6, 6,7,4,
-            0,4,7, 7,3,0,
-            1,5,6, 6,2,1,
-            0,1,5, 5,4,0,
-            3,2,6, 6,7,3
+        std::vector<unsigned int> indices = {
+            // Front face
+            0, 1, 2,  2, 3, 0,
+            // Back face
+            4, 6, 5,  6, 4, 7,
+            // Left face
+            8, 9, 10,  10, 11, 8,
+            // Right face
+            12, 14, 13,  14, 12, 15,
+            // Top face
+            16, 17, 18,  18, 19, 16,
+            // Bottom face
+            20, 22, 21,  22, 20, 23
         };
 
+        std::vector<Vertex> vertices = {
+            // Front face
+            {{-hw, -hh,  hd}, {0,0,1}, {0,0}},
+            {{ hw, -hh,  hd}, {0,0,1}, {1,0}},
+            {{ hw,  hh,  hd}, {0,0,1}, {1,1}},
+            {{-hw,  hh,  hd}, {0,0,1}, {0,1}},
+
+            // Back face
+            {{-hw, -hh, -hd}, {0,0,-1}, {1,0}},
+            {{ hw, -hh, -hd}, {0,0,-1}, {0,0}},
+            {{ hw,  hh, -hd}, {0,0,-1}, {0,1}},
+            {{-hw,  hh, -hd}, {0,0,-1}, {1,1}},
+
+            // Left face
+            {{-hw, -hh, -hd}, {-1,0,0}, {0,0}},
+            {{-hw, -hh,  hd}, {-1,0,0}, {1,0}},
+            {{-hw,  hh,  hd}, {-1,0,0}, {1,1}},
+            {{-hw,  hh, -hd}, {-1,0,0}, {0,1}},
+
+            // Right face
+            {{ hw, -hh, -hd}, {1,0,0}, {1,0}},
+            {{ hw, -hh,  hd}, {1,0,0}, {0,0}},
+            {{ hw,  hh,  hd}, {1,0,0}, {0,1}},
+            {{ hw,  hh, -hd}, {1,0,0}, {1,1}},
+
+            // Top face
+            {{-hw,  hh,  hd}, {0,1,0}, {0,0}},
+            {{ hw,  hh,  hd}, {0,1,0}, {1,0}},
+            {{ hw,  hh, -hd}, {0,1,0}, {1,1}},
+            {{-hw,  hh, -hd}, {0,1,0}, {0,1}},
+
+            // Bottom face
+            {{-hw, -hh,  hd}, {0,-1,0}, {0,1}},
+            {{ hw, -hh,  hd}, {0,-1,0}, {1,1}},
+            {{ hw, -hh, -hd}, {0,-1,0}, {1,0}},
+            {{-hw, -hh, -hd}, {0,-1,0}, {0,0}},
+        };
+
+		mesh = new DynamicMesh(vertices, indices);
         
-		mesh = new DynamicMesh(particles, indices);
-
-	    texture = new Texture("resources/textures/crate.jpg");
-
+	   // texture = new Texture("D:\\C++ Development\\Hexium\\resource\\textures\\crate.jpg", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+        
         srand(time(0));       
 
         float x = rand() / (float)RAND_MAX;   
@@ -70,5 +113,15 @@ public:
         mesh->setColor(col);
 
         angularVelocity = Vector3(0, 0, 2.0f);
+    }
+
+    void initializeGPU() override {
+       
+		std::cout << "Initializing Rectangle GPU resources.\n";
+
+        mesh->setupBuffers();
+        texture = new Texture("resource\\textures\\crate2.jpg", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+
+      
     }
 };

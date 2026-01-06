@@ -13,9 +13,9 @@ public:
     virtual void setupBuffers() = 0;
     virtual int indexCount() const = 0;
 
-    void setColor(const Vector3& col) { color = col; }
-    Vector3 getColor() const { return color; }
+    virtual void setColor(const Vector3& col) =0;
+  
 
 protected:
-    Vector3 color = Vector3(1, 1, 1);
+   
 };

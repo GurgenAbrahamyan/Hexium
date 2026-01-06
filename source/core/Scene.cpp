@@ -7,18 +7,19 @@
 Scene::Scene(EventBus* bus) {
     bus->subscribe<CreateObject>([this](CreateObject& event) {
     
+     
             Rectangle* rec = new Rectangle();
             std::cout << "Creating object\n" << objects.size();
             RenderMesh* mesh = rec->getMesh();
-            mesh->setupBuffers();
-            mesh->bind();
+            rec->initializeGPU();
+
 
             objects.push_back(rec);
         
         });
 
-  /*  objects.push_back(new Rectangle(Vector3(0, 0, 0), Vector3(10, 10, 10)));
-    objects.push_back(new Rectangle(Vector3(0, 0, 10), Vector3(10, 10, 10)));*/
+    objects.push_back(new Rectangle(Vector3(0, 0, 0), Vector3(10, 10, 10)));
+    objects.push_back(new Rectangle(Vector3(0, 0, 10), Vector3(10, 50, 10)));
 }
 
 Scene::~Scene() {

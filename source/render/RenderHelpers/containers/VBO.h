@@ -7,10 +7,10 @@ class VBO {
 public:
     GLuint ID;
 
-    VBO(GLfloat* vertices, GLsizeiptr size, bool dynamic) {
+    VBO(const void* data, GLsizeiptr size, bool dynamic) {
         glGenBuffers(1, &ID);
         glBindBuffer(GL_ARRAY_BUFFER, ID);
-        glBufferData(GL_ARRAY_BUFFER, size, vertices, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, size, data, dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
     }
 
     ~VBO() { glDeleteBuffers(1, &ID); }
@@ -18,7 +18,7 @@ public:
     void Bind() const { glBindBuffer(GL_ARRAY_BUFFER, ID); }
     void Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
-    void UpdateData(GLfloat* newVertices, GLsizeiptr size) {
+    void UpdateData(const void* newVertices, GLsizeiptr size) {
         Bind();  
         glBufferSubData(GL_ARRAY_BUFFER, 0, size, newVertices);
     }

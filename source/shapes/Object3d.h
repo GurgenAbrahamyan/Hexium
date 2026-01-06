@@ -31,11 +31,14 @@ public:
         delete mesh;
     }
 
+    virtual void initializeGPU() {};
+
 
 
     RenderMesh* getMesh() const { return mesh; }
     ParticleSystem* getParticleSystem() const { return particles; }
     Vector3 getPosition() const { return position; }
+    Texture* getTexture() const { return texture; }
 
     virtual void applyForce(ForceGenerator* gen, float dt) {}
     virtual void integrate(float dt) {}

@@ -49,6 +49,12 @@
     <Filter Include="Source Files\Engine\graphics">
       <UniqueIdentifier>{15b33e9e-30eb-444f-8b12-1250a99638f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\shaders">
+      <UniqueIdentifier>{bb78a888-9c3a-4a3f-a8d2-67a5590cd3db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\textures">
+      <UniqueIdentifier>{9eefbffc-c419-4fd5-9eb4-84244c9528cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\libraries\glad.c">
@@ -92,9 +98,6 @@
     </ClCompile>
     <ClCompile Include="source\render\RenderHelpers\Shader.cpp">
       <Filter>Source Files\Engine\render\RenderHelpers</Filter>
-    </ClCompile>
-    <ClCompile Include="source\render\RenderHelpers\containers\VAO.cpp">
-      <Filter>Source Files\Engine\render\RenderHelpers\containers</Filter>
     </ClCompile>
     <ClCompile Include="source\shapes\RigidBody.cpp">
       <Filter>Source Files\Engine\shapes</Filter>
@@ -176,9 +179,6 @@
     <ClInclude Include="source\render\RenderHelpers\Shader.h">
       <Filter>Source Files\Engine\render\RenderHelpers</Filter>
     </ClInclude>
-    <ClInclude Include="source\render\RenderHelpers\containers\VBO.h">
-      <Filter>Source Files\Engine\render\RenderHelpers\containers</Filter>
-    </ClInclude>
     <ClInclude Include="source\render\RenderHelpers\containers\EBO.h">
       <Filter>Source Files\Engine\render\RenderHelpers\containers</Filter>
     </ClInclude>
@@ -218,13 +218,24 @@
     <ClInclude Include="source\graphics\TextureManager.h">
       <Filter>Source Files\Engine\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="source\render\RenderHelpers\containers\VBO.h">
+      <Filter>Source Files\Engine\render\RenderHelpers\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\Vertex.h">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="resource\Shaders\default.vertex">
-      <Filter>Resource Files</Filter>
-    </CopyFileToFolders>
     <CopyFileToFolders Include="resource\Shaders\default.fragment">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\shaders</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="resource\Shaders\default.vertex">
+      <Filter>Resource Files\shaders</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resource\textures\crate.jpg">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -32,25 +32,30 @@ Renderer::Renderer(std::vector<Object3D*>& objects, Camera* camera)
 
     for (auto obj : objectList) {
         RenderMesh* mesh = obj->getMesh();
-        if (mesh) {
-            mesh->setupBuffers();
-        }
+		obj->initializeGPU();
+	//	std::cout << "Initializing object GPU resources 67.\n";
+	   // obj->getTexture()->texUnit(*shader, "tex0", 0);
+        
     }
 
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    
 }
 
 void Renderer::render() {
     glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    shader->Activate();
+
     Mat4 view = camera->getViewMatrix();
     Mat4 projection = camera->getProjectionMatrix();
 
-    shader->Activate();
+    
     glUniformMatrix4fv(glGetUniformLocation(shader->ID, "view"), 1, GL_FALSE, view.getData());
     glUniformMatrix4fv(glGetUniformLocation(shader->ID, "projection"), 1, GL_FALSE, projection.getData());
 
@@ -61,14 +66,18 @@ void Renderer::render() {
         mesh->bind();
         mesh->update(obj);
 
+        if(obj->getTexture()) {
+            obj->getTexture()->Bind();
+            obj->getTexture()->texUnit(*shader, "tex0", 0);
+		}
+
         Mat4 model = Mat4::translate(obj->getPosition());
         glUniformMatrix4fv(glGetUniformLocation(shader->ID, "model"), 1, GL_FALSE, model.getData());
 
-        Vector3 c = mesh->getColor();
-        GLint colorLoc = glGetUniformLocation(shader->ID, "uColor");
-        glUniform4f(colorLoc, c.x, c.y, c.z, 1.0f);
-
+       
         glDrawElements(GL_TRIANGLES, mesh->indexCount(), GL_UNSIGNED_INT, 0);
+
+        
     }
 
     glfwSwapBuffers(window);

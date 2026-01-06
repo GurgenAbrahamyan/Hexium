@@ -1,13 +1,12 @@
 # Changelog
 
-## [0.1.0] - 2026-01-06 (First Commit)
+## [0.1.1] - 2026-01-07 
 
 
 ### Added
-- Initial OpenGL renderer
-- Basic rigid body physics
-- Texture manager (initial version)
+- Textures are loaded and rendered
+- Architectual improvements
 
 ### Known Issues
 - No collision detection
-- No resource hot-reloading
+- No texture manager for reusing already exisiting textures

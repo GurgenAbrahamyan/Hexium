@@ -3,40 +3,23 @@
 #include "../stb/stb_image.h"
 #include <../glad/glad.h>
 #include <string>
-class Texture {
+#include "../render/RenderHelpers/Shader.h"
 
-private:
 
-	int imgWidth, imgHeight, numChannels;
-	unsigned char* data;
 
-	GLuint texture;
-	
+class Texture
+{
 public:
-	Texture(std::string path) {
+	GLuint ID = 0;
+	GLenum type;
+	Texture(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType);
 
-		data = stbi_load(path.c_str(), &imgWidth, &imgHeight, &numChannels, 0);
+	
+	void texUnit(Shader& shader, const char* uniform, GLuint unit);
 
-		glGenTextures(1, &texture);
+	void Bind();
+	
+	void Unbind();
 
-		glActiveTexture(GL_TEXTURE0);
-
-		glBindTexture(GL_TEXTURE_2D, texture);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imgWidth, imgHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
-	~Texture() {
-		stbi_image_free(data);
-		glDeleteTextures(1, &texture);
-	}
+	void Delete();
 };
