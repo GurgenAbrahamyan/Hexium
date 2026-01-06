@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{49dc7667-fe92-4f5b-9735-16a6305af6f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\shapes">
+      <UniqueIdentifier>{299cb915-9d35-44f7-8f20-dbd7d1ed1402}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\utils">
+      <UniqueIdentifier>{54e80303-028c-4ddd-b8a1-8146acf4daf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\render">
+      <UniqueIdentifier>{a6b76a48-b6f6-4ba3-bcc4-3c00356aa59f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\dynamics">
+      <UniqueIdentifier>{8b82350a-8028-445d-a4a5-28c90e7a3575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\math">
+      <UniqueIdentifier>{b8d4ed6e-047e-44c1-9682-7e78293edb92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\core">
+      <UniqueIdentifier>{d9bddc02-d839-42e3-9f61-bff02a0831d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\libraries">
+      <UniqueIdentifier>{c0f30060-467e-4622-b5a0-ea42df518ae5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\input">
+      <UniqueIdentifier>{808b3fa8-eda0-404a-b14a-3c598e6aa58f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\render\RenderHelpers">
+      <UniqueIdentifier>{de3c4339-09f5-4e09-9309-cb568ef18668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\render\RenderHelpers\containers">
+      <UniqueIdentifier>{023235dd-5d17-4e9d-9187-913f6d3612f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\graphics">
+      <UniqueIdentifier>{15b33e9e-30eb-444f-8b12-1250a99638f7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\libraries\glad.c">
+      <Filter>Source Files\Engine\libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="source\dynamics\ForceGenerator.cpp">
+      <Filter>Source Files\Engine\dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\libraries\stb.cpp">
+      <Filter>Source Files\Engine\libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\PhysicsEngine.cpp">
+      <Filter>Source Files\Engine\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\Scene.cpp">
+      <Filter>Source Files\Engine\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\Engine.cpp">
+      <Filter>Source Files\Engine\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\Texture.cpp">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\TextureManager.cpp">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\DynamicMesh.cpp">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\StaticMesh.cpp">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\input\MouseInput.cpp">
+      <Filter>Source Files\Engine\input</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\Camera.cpp">
+      <Filter>Source Files\Engine\render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\Renderer.cpp">
+      <Filter>Source Files\Engine\render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\RenderHelpers\Shader.cpp">
+      <Filter>Source Files\Engine\render\RenderHelpers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\RenderHelpers\containers\VAO.cpp">
+      <Filter>Source Files\Engine\render\RenderHelpers\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\shapes\RigidBody.cpp">
+      <Filter>Source Files\Engine\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\ObjectLoader.cpp">
+      <Filter>Source Files\Engine\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\SceneLoader.cpp">
+      <Filter>Source Files\Engine\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\utils\TextureLoader.cpp">
+      <Filter>Source Files\Engine\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Hexium.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\core\Engine.h">
+      <Filter>Source Files\Engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\Event.h">
+      <Filter>Source Files\Engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\EventBus.h">
+      <Filter>Source Files\Engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\PhysicsEngine.h">
+      <Filter>Source Files\Engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\Scene.h">
+      <Filter>Source Files\Engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\dynamics\ForceGenerator.h">
+      <Filter>Source Files\Engine\dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\dynamics\GeneralIntegrators.h">
+      <Filter>Source Files\Engine\dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\dynamics\Particle.h">
+      <Filter>Source Files\Engine\dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\Renderer.h">
+      <Filter>Source Files\Engine\render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\UIRender.h">
+      <Filter>Source Files\Engine\render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\shapes\Object3d.h">
+      <Filter>Source Files\Engine\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="source\shapes\Rectangle.h">
+      <Filter>Source Files\Engine\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\ObjectLoader.h">
+      <Filter>Source Files\Engine\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\SceneLoader.h">
+      <Filter>Source Files\Engine\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math_custom\GeneralFunctions.h">
+      <Filter>Source Files\Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math_custom\Vector3.h">
+      <Filter>Source Files\Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\input\KeyBoardInput.h">
+      <Filter>Source Files\Engine\input</Filter>
+    </ClInclude>
+    <ClInclude Include="source\input\UIInput.h">
+      <Filter>Source Files\Engine\input</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\Camera.h">
+      <Filter>Source Files\Engine\render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math_custom\Mat4.h">
+      <Filter>Source Files\Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\RenderHelpers\Shader.h">
+      <Filter>Source Files\Engine\render\RenderHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\RenderHelpers\containers\VBO.h">
+      <Filter>Source Files\Engine\render\RenderHelpers\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\RenderHelpers\containers\EBO.h">
+      <Filter>Source Files\Engine\render\RenderHelpers\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\RenderHelpers\containers\VAO.h">
+      <Filter>Source Files\Engine\render\RenderHelpers\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\input\MouseInput.h">
+      <Filter>Source Files\Engine\input</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\EngineContext.h">
+      <Filter>Source Files\Engine\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\dynamics\colider\Header.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\shapes\RigidBody.h">
+      <Filter>Source Files\Engine\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math_custom\Mat3.h">
+      <Filter>Source Files\Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\utils\TextureLoader.h">
+      <Filter>Source Files\Engine\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\DynamicMesh.h">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\RenderMesh.h">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\StaticMesh.h">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\Texture.h">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\TextureManager.h">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="resource\Shaders\default.vertex">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="resource\Shaders\default.fragment">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+</Project>
