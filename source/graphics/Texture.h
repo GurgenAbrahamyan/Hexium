@@ -1,25 +1,43 @@
 #pragma once
 
-#include "../stb/stb_image.h"
 #include <../glad/glad.h>
-#include <string>
-#include "../render/RenderHelpers/Shader.h"
+#include <cstdint>
 
 
 
-class Texture
-{
+
+
+struct TextureDesc {
+    GLenum target = GL_TEXTURE_2D;
+    GLenum internalFormat = GL_RGBA8;
+    GLenum format = GL_RGBA;
+    GLenum type = GL_UNSIGNED_BYTE;
+
+    bool generateMipmaps = true;
+    GLenum minFilter = GL_LINEAR_MIPMAP_LINEAR;
+    GLenum magFilter = GL_LINEAR;
+    GLenum wrapS = GL_REPEAT;
+    GLenum wrapT = GL_REPEAT;
+};
+
+
+class Texture {
 public:
-	GLuint ID = 0;
-	GLenum type;
-	Texture(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType);
+   
+    Texture(int width, int height, const void* data, const TextureDesc& desc);
+    ~Texture();
 
-	
-	void texUnit(Shader& shader, const char* uniform, GLuint unit);
+    
+    void Bind(uint32_t slot = 0) const;
+    void Unbind() const;
+    void Delete(); 
 
-	void Bind();
-	
-	void Unbind();
+    int getWidth() const { return width; }
+    int getHeight() const { return height; }
 
-	void Delete();
+private:
+    GLuint ID = 0;
+    GLenum target = GL_TEXTURE_2D;
+    int width = 0;
+    int height = 0;
 };

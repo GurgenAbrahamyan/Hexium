@@ -1,76 +1,48 @@
 #pragma once
 #include "Texture.h"
-#include "../stb/stb_image.h"
 #include <iostream>
 
 
-    Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType){
-	
-	type = texType;
-	
+Texture::Texture(int w, int h, const void* data, const TextureDesc& desc)
+    : width(w), height(h), target(desc.target)
+{
+    glGenTextures(1, &ID);
+    glBindTexture(target, ID);
 
+   
+    glTexImage2D(target, 0, desc.internalFormat, width, height, 0, desc.format, desc.type, data);
 
-	
-	int widthImg, heightImg, numColCh;
+  
+    glTexParameteri(target, GL_TEXTURE_MIN_FILTER, desc.minFilter);
+    glTexParameteri(target, GL_TEXTURE_MAG_FILTER, desc.magFilter);
+    glTexParameteri(target, GL_TEXTURE_WRAP_S, desc.wrapS);
+    glTexParameteri(target, GL_TEXTURE_WRAP_T, desc.wrapT);
 
-	stbi_set_flip_vertically_on_load(true);
-	
-	unsigned char* bytes = stbi_load(image, &widthImg, &heightImg, &numColCh, 0);
+    if (desc.generateMipmaps) {
+        glGenerateMipmap(target);
+    }
 
-	
-	if (!bytes) {
-		std::cout << "Failed to load texture: " << image << std::endl;
-		return;
-	}
+    glBindTexture(target, 0);
 
-
-	glGenTextures(1, &ID);
-	
-	glActiveTexture(slot);
-	glBindTexture(texType, ID);
-
-	
-	glTexParameteri(texType, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-	glTexParameteri(texType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	
-	glTexParameteri(texType, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(texType, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	
-	glTexImage2D(texType, 0, GL_RGB, widthImg, heightImg, 0, format, pixelType, bytes);
-	
-	glGenerateMipmap(texType);
-
-	
-	stbi_image_free(bytes);
-
-	
-	glBindTexture(texType, 0);
-
-	std::cout << "created texture from " << image << ", ID: " << ID << std::endl;
+  //  std::cout << "Texture created, ID: " << ID << ", size: " << width << "x" << height << std::endl;
 }
 
-void Texture::texUnit(Shader& shader, const char* uniform, GLuint unit)
-{
-
-	GLuint texUni = glGetUniformLocation(shader.ID, uniform);
-	
-	shader.Activate();
-
-	glUniform1i(texUni, unit);
+Texture::~Texture() {
+    Delete();
 }
 
-void Texture::Bind()
-{
-	glBindTexture(type, ID);
+void Texture::Bind(uint32_t slot) const {
+    glActiveTexture(GL_TEXTURE0 + slot);
+    glBindTexture(target, ID);
 }
 
-void Texture::Unbind()
-{
-	glBindTexture(type, 0);
+void Texture::Unbind() const {
+    glBindTexture(target, 0);
 }
 
-void Texture::Delete()
-{
-	glDeleteTextures(1, &ID);
+void Texture::Delete() {
+    if (ID != 0) {
+        glDeleteTextures(1, &ID);
+        ID = 0;
+    }
 }

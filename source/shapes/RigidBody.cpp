@@ -1,7 +1,7 @@
 #include "RigidBody.h"
 
 RigidBody::RigidBody(Vector3 pos, float mass)
-    : mass(mass), invMass(1 / mass), angularVelocity(Vector3(0, 0, 2.0f))
+    : mass(mass), invMass(1 / mass), angularVelocity(Vector3(0, 0, 0.0f))
 {
     position = pos;
     orientation.setIdentity();

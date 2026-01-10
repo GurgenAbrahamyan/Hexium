@@ -10,7 +10,7 @@ PhysicsEngine::PhysicsEngine(std::vector<Object3D*>& objects)
     : object3DS(objects)
 {
     Vector3 gravity(0, -9.81f, 0);
-    generators.push_back(new GravityGenerator(gravity));
+//    generators.push_back(new GravityGenerator(gravity));
 }
 
 PhysicsEngine::~PhysicsEngine() {

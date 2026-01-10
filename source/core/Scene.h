@@ -11,7 +11,8 @@ public:
     ~Scene();
 
     std::vector<Object3D*>& objectList();
-
+    void initGpu();
 private:
     std::vector<Object3D*> objects;
+	TextureManager textureManager;
 };

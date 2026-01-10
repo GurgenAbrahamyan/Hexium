@@ -7,6 +7,7 @@
 #include "RigidBody.h"
 #include "Object3D.h"
 #include "../graphics/DynamicMesh.h"
+#include "../graphics/TextureManager.h"
 #include <cstdlib> 
 #include <ctime>
 
@@ -63,41 +64,42 @@ public:
 
         std::vector<Vertex> vertices = {
             // Front face
-            {{-hw, -hh,  hd}, {0,0,1}, {0,0}},
-            {{ hw, -hh,  hd}, {0,0,1}, {1,0}},
-            {{ hw,  hh,  hd}, {0,0,1}, {1,1}},
-            {{-hw,  hh,  hd}, {0,0,1}, {0,1}},
+            {{-hw, -hh,  hd}, {1,0,0}, {0,0}}, // Red
+            {{ hw, -hh,  hd}, {0,1,0}, {1,0}}, // Green
+            {{ hw,  hh,  hd}, {0,0,1}, {1,1}}, // Blue
+            {{-hw,  hh,  hd}, {1,1,0}, {0,1}}, // Yellow
 
             // Back face
-            {{-hw, -hh, -hd}, {0,0,-1}, {1,0}},
-            {{ hw, -hh, -hd}, {0,0,-1}, {0,0}},
-            {{ hw,  hh, -hd}, {0,0,-1}, {0,1}},
-            {{-hw,  hh, -hd}, {0,0,-1}, {1,1}},
+            {{-hw, -hh, -hd}, {1,0,0}, {0,0}},
+            {{ hw, -hh, -hd}, {0,1,0}, {1,0}},
+            {{ hw,  hh, -hd}, {0,0,1}, {1,1}},
+            {{-hw,  hh, -hd}, {1,1,0}, {0,1}},
 
             // Left face
-            {{-hw, -hh, -hd}, {-1,0,0}, {0,0}},
-            {{-hw, -hh,  hd}, {-1,0,0}, {1,0}},
-            {{-hw,  hh,  hd}, {-1,0,0}, {1,1}},
-            {{-hw,  hh, -hd}, {-1,0,0}, {0,1}},
+            {{-hw, -hh, -hd}, {1,0,0}, {0,0}},
+            {{-hw, -hh,  hd}, {0,1,0}, {1,0}},
+            {{-hw,  hh,  hd}, {0,0,1}, {1,1}},
+            {{-hw,  hh, -hd}, {1,1,0}, {0,1}},
 
             // Right face
-            {{ hw, -hh, -hd}, {1,0,0}, {1,0}},
-            {{ hw, -hh,  hd}, {1,0,0}, {0,0}},
-            {{ hw,  hh,  hd}, {1,0,0}, {0,1}},
-            {{ hw,  hh, -hd}, {1,0,0}, {1,1}},
+            {{ hw, -hh, -hd}, {1,0,0}, {0,0}},
+            {{ hw, -hh,  hd}, {0,1,0}, {1,0}},
+            {{ hw,  hh,  hd}, {0,0,1}, {1,1}},
+            {{ hw,  hh, -hd}, {1,1,0}, {0,1}},
 
             // Top face
-            {{-hw,  hh,  hd}, {0,1,0}, {0,0}},
+            {{-hw,  hh,  hd}, {1,0,0}, {0,0}},
             {{ hw,  hh,  hd}, {0,1,0}, {1,0}},
-            {{ hw,  hh, -hd}, {0,1,0}, {1,1}},
-            {{-hw,  hh, -hd}, {0,1,0}, {0,1}},
+            {{ hw,  hh, -hd}, {0,0,1}, {1,1}},
+            {{-hw,  hh, -hd}, {1,1,0}, {0,1}},
 
             // Bottom face
-            {{-hw, -hh,  hd}, {0,-1,0}, {0,1}},
-            {{ hw, -hh,  hd}, {0,-1,0}, {1,1}},
-            {{ hw, -hh, -hd}, {0,-1,0}, {1,0}},
-            {{-hw, -hh, -hd}, {0,-1,0}, {0,0}},
+            {{-hw, -hh,  hd}, {1,0,0}, {0,0}},
+            {{ hw, -hh,  hd}, {0,1,0}, {1,0}},
+            {{ hw, -hh, -hd}, {0,0,1}, {1,1}},
+            {{-hw, -hh, -hd}, {1,1,0}, {0,1}},
         };
+
 
 		mesh = new DynamicMesh(vertices, indices);
         
@@ -112,16 +114,23 @@ public:
         Vector3 col(x, y, z);
         mesh->setColor(col);
 
-        angularVelocity = Vector3(0, 0, 2.0f);
+        angularVelocity = Vector3(0, 2, 0 );
     }
 
-    void initializeGPU() override {
+    void initializeGPU(TextureManager* manager) override {
        
-		std::cout << "Initializing Rectangle GPU resources.\n";
+		
 
+       
+		texture = manager->getTexture("resource\\textures\\crate2.jpg");
+        
         mesh->setupBuffers();
-        texture = new Texture("resource\\textures\\crate2.jpg", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+        
 
       
+    }
+
+    void createCrate(TextureManager* manager) {
+		texture = manager->getTexture("resource\\textures\\crate.jpg");
     }
 };

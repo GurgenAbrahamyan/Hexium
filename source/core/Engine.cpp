@@ -18,6 +18,7 @@ Engine::Engine()
     timeSinceLastFpsPrint(0.0f)
 {
     window = EngineContext::get().getWindow();
+	scene->initGpu();
 }
 
 Engine::~Engine() {

@@ -12,6 +12,8 @@ public:
     ~Shader();
 
     void Activate() const;
+    void setFloat(const char* name, float value);
+
 
 private:
     GLuint compileShader(const char* source, GLenum type);

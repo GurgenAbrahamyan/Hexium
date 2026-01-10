@@ -30,14 +30,7 @@ Renderer::Renderer(std::vector<Object3D*>& objects, Camera* camera)
 
     shader = new Shader("resource\\Shaders\\default.vertex", "resource\\Shaders\\default.fragment");
 
-    for (auto obj : objectList) {
-        RenderMesh* mesh = obj->getMesh();
-		obj->initializeGPU();
-	//	std::cout << "Initializing object GPU resources 67.\n";
-	   // obj->getTexture()->texUnit(*shader, "tex0", 0);
-        
-    }
-
+    
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
@@ -51,6 +44,7 @@ void Renderer::render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shader->Activate();
+    shader->setFloat("uTime", glfwGetTime());
 
     Mat4 view = camera->getViewMatrix();
     Mat4 projection = camera->getProjectionMatrix();
@@ -68,7 +62,7 @@ void Renderer::render() {
 
         if(obj->getTexture()) {
             obj->getTexture()->Bind();
-            obj->getTexture()->texUnit(*shader, "tex0", 0);
+         //   obj->getTexture()->texUnit(*shader, "tex0", 0);
 		}
 
         Mat4 model = Mat4::translate(obj->getPosition());

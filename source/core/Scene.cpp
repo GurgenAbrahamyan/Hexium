@@ -5,21 +5,32 @@
 #include <iostream>
 
 Scene::Scene(EventBus* bus) {
+	textureManager = TextureManager();
+
+
     bus->subscribe<CreateObject>([this](CreateObject& event) {
     
      
             Rectangle* rec = new Rectangle();
             std::cout << "Creating object\n" << objects.size();
-            RenderMesh* mesh = rec->getMesh();
-            rec->initializeGPU();
+        
+            rec->initializeGPU(&textureManager);
+            rec->createCrate(&textureManager);
 
 
             objects.push_back(rec);
         
         });
 
-    objects.push_back(new Rectangle(Vector3(0, 0, 0), Vector3(10, 10, 10)));
-    objects.push_back(new Rectangle(Vector3(0, 0, 10), Vector3(10, 50, 10)));
+  
+   // objects.push_back(new Rectangle(Vector3(0, 0, 0), Vector3(10, 10, 10)));
+    objects.push_back(new Rectangle(Vector3(0, 0, 10), Vector3(10, 30, 50)));
+    Rectangle* background = new Rectangle(Vector3(0, 0, 0), Vector3(1000, 1000, 1000));
+
+   
+    background->angularVelocity = Vector3(0, 0, 0);
+        
+    objects.push_back(background);
 }
 
 Scene::~Scene() {
@@ -29,4 +40,12 @@ Scene::~Scene() {
 
 std::vector<Object3D*>& Scene::objectList() {
     return objects;
+}
+
+void Scene::initGpu() {
+    for(Object3D* obj : objects) {
+        obj->initializeGPU(&textureManager);
+       
+	}
+
 }

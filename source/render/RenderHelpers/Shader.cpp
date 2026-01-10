@@ -67,3 +67,7 @@ void Shader::checkLinkErrors(GLuint program) {
         throw std::runtime_error("Shader program linking error: " + std::string(infoLog));
     }
 }
+
+void Shader::setFloat(const char* name, float value) {
+    glUniform1f(glGetUniformLocation(ID, name), value);
+}
