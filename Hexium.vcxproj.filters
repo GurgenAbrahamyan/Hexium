@@ -46,14 +46,14 @@
     <Filter Include="Source Files\Engine\render\RenderHelpers\containers">
       <UniqueIdentifier>{023235dd-5d17-4e9d-9187-913f6d3612f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Engine\graphics">
-      <UniqueIdentifier>{15b33e9e-30eb-444f-8b12-1250a99638f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\shaders">
       <UniqueIdentifier>{bb78a888-9c3a-4a3f-a8d2-67a5590cd3db}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files\textures">
       <UniqueIdentifier>{9eefbffc-c419-4fd5-9eb4-84244c9528cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\graphics">
+      <UniqueIdentifier>{15b33e9e-30eb-444f-8b12-1250a99638f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="source\Hexium.cpp">
       <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\Material.cpp">
+      <Filter>Source Files\Engine\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +226,15 @@
     </ClInclude>
     <ClInclude Include="source\graphics\Vertex.h">
       <Filter>Source Files\Engine\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\Light.h">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\Material.h">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\shapes\PhysicsObject.h">
+      <Filter>Source Files\Engine\shapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

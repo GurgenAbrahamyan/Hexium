@@ -1,50 +1,36 @@
 #pragma once
 
 #include <vector>
-
 #include "../dynamics/Particle.h"
 #include "../math_custom/Vector3.h"
 #include "RigidBody.h"
-#include "Object3D.h"
+#include "PhysicsObject.h"
 #include "../graphics/DynamicMesh.h"
 #include "../graphics/TextureManager.h"
-#include <cstdlib> 
+#include <cstdlib>
 #include <ctime>
 
-
-
-class Rectangle : public RigidBody {
+class Rectangle : public Object3D {
 public:
 
-
-    Rectangle(Vector3 pos = Vector3(0, 0, 0), Vector3 size = Vector3(10, 10, 10), float mass = 1.0f) {
-
+    Rectangle(Vector3 pos = Vector3(0, 0, 0), Vector3 scale = Vector3(10, 10, 10), float mass = 1.0f) {
         mesh = nullptr;
         this->mass = mass;
-		invMass = 1.0f / mass;
+        invMass = 1.0f / mass;
         this->position = pos;
-       
-
-       float hw = size.getX() / 2.0f;
-        float hh = size.getY() / 2.0f;
-        float hd = size.getZ() / 2.0f;
-
-       
-
+        this->scale = scale;
+        float hw = 0.5;
+        float hh = 0.5;
+        float hd = 0.5;
 
         std::vector<float> corners = {
-            -hw, -hh, -hd, hw, -hh, -hd,
-            hw,  hh, -hd, -hw,  hh, -hd,
-            -hw, -hh,  hd, hw, -hh,  hd,
-            hw,  hh,  hd, -hw,  hh,  hd
+            -hw, -hh, -hd,  hw, -hh, -hd,
+             hw,  hh, -hd, -hw,  hh, -hd,
+            -hw, -hh,  hd,  hw, -hh,  hd,
+             hw,  hh,  hd, -hw,  hh,  hd
         };
 
-        this->particles = new ParticleSystem(mass);
-		orientation.setIdentity();
-        for (int x = 0; x < corners.size();x+=3 ) {
-            Particle* p = new Particle(mass / corners.size()/3, Vector3( corners[x], corners[x+1], corners[x+2]));
-            particles->addParticle(p);
-        }
+        
 
 
         std::vector<unsigned int> indices = {
@@ -62,75 +48,69 @@ public:
             20, 22, 21,  22, 20, 23
         };
 
+		physics = new RigidBody(pos, mass, scale, corners, indices);
+        dynamic_cast<RigidBody*>(physics)->angularVelocity = Vector3(0, 2, 0);
+
         std::vector<Vertex> vertices = {
-            // Front face
-            {{-hw, -hh,  hd}, {1,0,0}, {0,0}}, // Red
-            {{ hw, -hh,  hd}, {0,1,0}, {1,0}}, // Green
-            {{ hw,  hh,  hd}, {0,0,1}, {1,1}}, // Blue
-            {{-hw,  hh,  hd}, {1,1,0}, {0,1}}, // Yellow
+            // Front face (+Z)
+            {{-hw, -hh,  hd}, {1,1,1}, {0,0}, {0,0,1}},
+            {{ hw, -hh,  hd}, {1,1,1}, {1,0}, {0,0,1}},
+            {{ hw,  hh,  hd}, {1,1,1}, {1,1}, {0,0,1}},
+            {{-hw,  hh,  hd}, {1,1,1}, {0,1}, {0,0,1}},
 
-            // Back face
-            {{-hw, -hh, -hd}, {1,0,0}, {0,0}},
-            {{ hw, -hh, -hd}, {0,1,0}, {1,0}},
-            {{ hw,  hh, -hd}, {0,0,1}, {1,1}},
-            {{-hw,  hh, -hd}, {1,1,0}, {0,1}},
+            // Back face (-Z)
+            {{-hw, -hh, -hd}, {1,1,1}, {0,0}, {0,0,-1}},
+            {{ hw, -hh, -hd}, {1,1,1}, {1,0}, {0,0,-1}},
+            {{ hw,  hh, -hd}, {1,1,1}, {1,1}, {0,0,-1}},
+            {{-hw,  hh, -hd}, {1,1,1}, {0,1}, {0,0,-1}},
 
-            // Left face
-            {{-hw, -hh, -hd}, {1,0,0}, {0,0}},
-            {{-hw, -hh,  hd}, {0,1,0}, {1,0}},
-            {{-hw,  hh,  hd}, {0,0,1}, {1,1}},
-            {{-hw,  hh, -hd}, {1,1,0}, {0,1}},
+            // Left face (-X)
+            {{-hw, -hh, -hd}, {1,1,1}, {0,0}, {-1,0,0}},
+            {{-hw, -hh,  hd}, {1,1,1}, {1,0}, {-1,0,0}},
+            {{-hw,  hh,  hd}, {1,1,1}, {1,1}, {-1,0,0}},
+            {{-hw,  hh, -hd}, {1,1,1}, {0,1}, {-1,0,0}},
 
-            // Right face
-            {{ hw, -hh, -hd}, {1,0,0}, {0,0}},
-            {{ hw, -hh,  hd}, {0,1,0}, {1,0}},
-            {{ hw,  hh,  hd}, {0,0,1}, {1,1}},
-            {{ hw,  hh, -hd}, {1,1,0}, {0,1}},
+            // Right face (+X)
+            {{hw, -hh, -hd}, {1,1,1}, {0,0}, {1,0,0}},
+            {{ hw, -hh,  hd}, {1,1,1}, {1,0}, {1,0,0}},
+            {{ hw,  hh,  hd}, {1,1,1}, {1,1}, {1,0,0}},
+            {{ hw,  hh, -hd}, {1,1,1}, {0,1}, {1,0,0}},
+            
+            // Top face (+Y)
+            {{-hw,  hh,  hd}, {1,1,1}, {0,0}, {0,1,0}},
+            {{ hw,  hh,  hd}, {1,1,1}, {1,0}, {0,1,0}},
+            {{ hw,  hh, -hd}, {1,1,1}, {1,1}, {0,1,0}},
+            {{-hw,  hh, -hd}, {1,1,1}, {0,1}, {0,1,0}},
 
-            // Top face
-            {{-hw,  hh,  hd}, {1,0,0}, {0,0}},
-            {{ hw,  hh,  hd}, {0,1,0}, {1,0}},
-            {{ hw,  hh, -hd}, {0,0,1}, {1,1}},
-            {{-hw,  hh, -hd}, {1,1,0}, {0,1}},
-
-            // Bottom face
-            {{-hw, -hh,  hd}, {1,0,0}, {0,0}},
-            {{ hw, -hh,  hd}, {0,1,0}, {1,0}},
-            {{ hw, -hh, -hd}, {0,0,1}, {1,1}},
-            {{-hw, -hh, -hd}, {1,1,0}, {0,1}},
+            // Bottom face (-Y)
+            {{-hw, -hh,  hd}, {1,1,1}, {0,0}, {0,-1,0}},
+            {{ hw, -hh,  hd}, {1,1,1}, {1,0}, {0,-1,0}},
+            {{ hw, -hh, -hd}, {1,1,1}, {1,1}, {0,-1,0}},
+            {{-hw, -hh, -hd}, {1,1,1}, {0,1}, {0,-1,0}},
         };
 
+        mesh = new DynamicMesh(vertices, indices);
 
-		mesh = new DynamicMesh(vertices, indices);
-        
-	   // texture = new Texture("D:\\C++ Development\\Hexium\\resource\\textures\\crate.jpg", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-        
-        srand(time(0));       
-
-        float x = rand() / (float)RAND_MAX;   
-        float y = rand() / (float)RAND_MAX;
-        float z = rand() / (float)RAND_MAX;
-
-        Vector3 col(x, y, z);
-        mesh->setColor(col);
-
-        angularVelocity = Vector3(0, 2, 0 );
+		material = new Material();
+       
     }
 
     void initializeGPU(TextureManager* manager) override {
-       
-		
-
-       
-		texture = manager->getTexture("resource\\textures\\crate2.jpg");
         
-        mesh->setupBuffers();
-        
+        if (!material) return;
+        material->SetTexture(0, manager->getTexture("resource\\textures\\brick_wall.jpg", TextureUsage::Color));
+        material->SetTexture(1, manager->getTexture("resource\\textures\\brick_wall_specular.png", TextureUsage::Color));
+       
 
-      
+ 
+
+
+        if (!mesh) return;
+           mesh->setupBuffers();
+
     }
 
-    void createCrate(TextureManager* manager) {
-		texture = manager->getTexture("resource\\textures\\crate.jpg");
-    }
+  /*  void createCrate(TextureManager* manager) {
+       textures. texture = manager->getTexture("resource\\textures\\crate.jpg");
+    }*/
 };

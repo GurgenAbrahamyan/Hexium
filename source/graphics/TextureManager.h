@@ -13,6 +13,6 @@ private:
 public:
 	TextureManager();
 
-	Texture* getTexture(std::string path);
+	Texture* getTexture(std::string path, TextureUsage usage);
 
 };

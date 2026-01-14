@@ -27,11 +27,9 @@ Texture::Texture(int w, int h, const void* data, const TextureDesc& desc)
   //  std::cout << "Texture created, ID: " << ID << ", size: " << width << "x" << height << std::endl;
 }
 
-Texture::~Texture() {
-    Delete();
-}
 
-void Texture::Bind(uint32_t slot) const {
+
+void Texture::Bind(int slot)  {
     glActiveTexture(GL_TEXTURE0 + slot);
     glBindTexture(target, ID);
 }
@@ -39,6 +37,8 @@ void Texture::Bind(uint32_t slot) const {
 void Texture::Unbind() const {
     glBindTexture(target, 0);
 }
+
+
 
 void Texture::Delete() {
     if (ID != 0) {

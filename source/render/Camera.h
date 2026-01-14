@@ -36,7 +36,7 @@ private:
     EventBus* bus;
     Mat4 projection;
 
-    float MovementSpeed = 20.0f;
+    float MovementSpeed = 200.0f;
     float MouseSensitivity = 0.1f;
 
     bool CamMode;

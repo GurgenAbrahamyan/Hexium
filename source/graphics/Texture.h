@@ -5,6 +5,15 @@
 
 
 
+enum TextureUsage {
+    Color,      
+    Specular,   
+    Normal,
+    Data       
+};
+
+
+
 
 
 struct TextureDesc {
@@ -25,10 +34,9 @@ class Texture {
 public:
    
     Texture(int width, int height, const void* data, const TextureDesc& desc);
-    ~Texture();
-
-    
-    void Bind(uint32_t slot = 0) const;
+    Texture(const Texture&) = delete;
+    Texture& operator=(const Texture&) = delete;
+    void Bind( int slot = 0);
     void Unbind() const;
     void Delete(); 
 

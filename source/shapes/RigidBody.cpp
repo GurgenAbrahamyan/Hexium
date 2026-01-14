@@ -1,14 +1,28 @@
 #include "RigidBody.h"
 
-RigidBody::RigidBody(Vector3 pos, float mass)
-    : mass(mass), invMass(1 / mass), angularVelocity(Vector3(0, 0, 0.0f))
+
+
+
+
+RigidBody::RigidBody(Vector3 pos, float mass, Vector3 scale, const std::vector<float>& vertices, const std::vector<unsigned int>& ind)
+    : mass(mass), invMass(1 / mass), angularVelocity(Vector3(0, 0, 0.0f)), scale(scale)
 {
     position = pos;
     orientation.setIdentity();
+
+	particles = new ParticleSystem(mass);
+
+    for (int x = 0; x < vertices.size(); x += 3) {
+        Particle* p = new Particle(mass / vertices.size() / 3, Vector3(vertices[x], vertices[x + 1], vertices[x + 2]));
+        particles->addParticle(p);
+    }
+
+    //indicies unused for now
+
 }
 
-void RigidBody::applyForce(ForceGenerator* gen, float dt) {
-    gen->applyRigid(this, dt);
+void RigidBody::applyForce(ForceGenerator* gen) {
+    gen->applyRigid(this, 0.0);
 }
 
 void RigidBody::addForceToAccum(const Vector3& force) {
@@ -37,10 +51,19 @@ void RigidBody::integrate(float dt) {
     }
 }
 
+
 float RigidBody::getMass() const {
     return mass;
 }
 
-Matrix3 RigidBody::getOrientation() const {
-    return orientation;
+Matrix3* RigidBody::getOrientation() {
+    return &orientation;
 }
+
+Vector3 RigidBody::getAngularVelocity() {
+    return angularVelocity;
+}
+
+
+
+

@@ -18,7 +18,12 @@ Engine::Engine()
     timeSinceLastFpsPrint(0.0f)
 {
     window = EngineContext::get().getWindow();
-	scene->initGpu();
+    scene->initGpu();
+    
+    renderer->setLights(scene->lightsList());
+
+    
+    
 }
 
 Engine::~Engine() {
@@ -41,18 +46,20 @@ void Engine::run() {
         lastTime = now;
         float frameTime = delta.count();
 
- 
+
         accumulator += frameTime;
 
-      
+
         while (accumulator >= PHYSICS_STEP) {
-            EngineContext::get().deltaTime = accumulator;
+            
             physicsEngine->update(PHYSICS_STEP);
             accumulator -= PHYSICS_STEP;
         }
 
-       
+        EngineContext::get().deltaTime = frameTime;
+
         keyboardInput->processInput();
+		
         mouseInput->proccessInput();
         ui->processInput();
         renderer->render();

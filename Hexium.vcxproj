@@ -149,6 +149,7 @@
     <ClCompile Include="source\core\Scene.cpp" />
     <ClCompile Include="source\dynamics\ForceGenerator.cpp" />
     <ClCompile Include="source\graphics\DynamicMesh.cpp" />
+    <ClCompile Include="source\graphics\Material.cpp" />
     <ClCompile Include="source\graphics\StaticMesh.cpp" />
     <ClCompile Include="source\graphics\Texture.cpp" />
     <ClCompile Include="source\graphics\TextureManager.cpp" />
@@ -176,6 +177,8 @@
     <ClInclude Include="source\dynamics\GeneralIntegrators.h" />
     <ClInclude Include="source\dynamics\Particle.h" />
     <ClInclude Include="source\graphics\DynamicMesh.h" />
+    <ClInclude Include="source\graphics\Light.h" />
+    <ClInclude Include="source\graphics\Material.h" />
     <ClInclude Include="source\graphics\RenderMesh.h" />
     <ClInclude Include="source\graphics\StaticMesh.h" />
     <ClInclude Include="source\graphics\Texture.h" />
@@ -196,6 +199,7 @@
     <ClInclude Include="source\render\RenderHelpers\Shader.h" />
     <ClInclude Include="source\render\UIRender.h" />
     <ClInclude Include="source\shapes\Object3d.h" />
+    <ClInclude Include="source\shapes\PhysicsObject.h" />
     <ClInclude Include="source\shapes\Rectangle.h" />
     <ClInclude Include="source\shapes\RigidBody.h" />
     <ClInclude Include="source\utils\ObjectLoader.h" />

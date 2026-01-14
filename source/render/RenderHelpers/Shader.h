@@ -4,6 +4,9 @@
 #include <glad/glad.h>
 #include <string>
 
+class Vector3;
+class Mat4;
+
 class Shader {
 public:
     GLuint ID;
@@ -13,7 +16,10 @@ public:
 
     void Activate() const;
     void setFloat(const char* name, float value);
-
+    void setInt(const char* name, int value);
+    void setVec3(const char* name, Vector3 value);
+    void setVec4(const char* name, Vector3 value, float t);
+    void setMat4(const char* name, Mat4 value);
 
 private:
     GLuint compileShader(const char* source, GLenum type);

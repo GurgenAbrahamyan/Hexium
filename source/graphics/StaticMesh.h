@@ -15,7 +15,7 @@ public:
         EBO1 = new EBO(const_cast<GLuint*>(ind.data()), ind.size() * sizeof(unsigned int), false);
 
         VAO1->Bind();
-        VAO1->LinkVBO(VBO1, 0);
+        VAO1->LINKVBO(VBO1, 0);
         VAO1->Unbind();
     }
 
@@ -26,7 +26,7 @@ public:
     }
 
     void bind() override { VAO1->Bind(); }
-    void update(Object3D*) override {}  
+    
     int indexCount() const override { return indexCnt; }
 
 private:

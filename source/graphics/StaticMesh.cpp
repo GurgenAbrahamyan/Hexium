@@ -26,7 +26,7 @@ public:
     }
 
     void bind() override { VAO1->Bind(); }
-    void update(Object3D*) override {}  
+   
     int indexCount() const override { return indexCnt; }
 
 private:

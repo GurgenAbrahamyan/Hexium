@@ -1,49 +1,66 @@
 #pragma once
 
-
 #include <vector>
-#include "../dynamics/Particle.h"
+#include "../graphics/RenderMesh.h"
+#include "../graphics/Material.h"
+#include "../graphics/TextureManager.h"
+#include "../shapes/PhysicsObject.h"
 #include "../math_custom/Vector3.h"
 #include "../dynamics/ForceGenerator.h"
-#include "../graphics/Texture.h"
-#include "../graphics/TextureManager.h"
+#include "../math_custom/Mat3.h"
 
-class ForceGenerator;
-class RenderMesh;
 
 class Object3D {
-
 protected:
-    ParticleSystem* particles = nullptr;
-    RenderMesh* mesh = nullptr;
-    Texture* texture =nullptr;  //should be changed to texture array in future
-     
-    Vector3 position;
+    PhysicsObject* physics = nullptr;  
+    RenderMesh* mesh = nullptr;       
+    Material* material = nullptr;      
+
+	Vector3 scale = Vector3(1, 1, 1);
+	Vector3 position = Vector3(0, 0, 0);
+	float mass = 1.0f;
+	float invMass = 1.0f;
+
+
 public:
-    Object3D(Vector3 pos = Vector3(10, 10, 10), float mass = 1.0f)
-        : mesh(nullptr), position(pos)
+    Object3D(PhysicsObject* physicsObj = nullptr, RenderMesh* meshObj = nullptr, Material* mat = nullptr)
+        : physics(physicsObj), mesh(meshObj), material(mat)
     {
-        position = pos;
-        particles = new ParticleSystem(mass);
     }
 
     virtual ~Object3D() {
-        delete particles;
-        delete mesh;
+        delete physics;   
+        delete mesh;      
+        delete material;  
     }
 
+   
+    virtual void initializeGPU(TextureManager * manager) {
+       
+        if (mesh) mesh->setupBuffers();
+    }
+    
 
+    virtual void applyForce(ForceGenerator* gen) {
+        if (physics) physics->applyForce(gen);
+    }
 
-    virtual void initializeGPU(TextureManager* manager) {}
+    Vector3 getPosition() const {
+        return physics ? physics->position : Vector3(0, 0, 0);
+    }
+
+    Matrix3 getOrientation() const {
+        return physics->getOrientation();
+    }
+
+    Vector3 getScale() const {
+        return scale;
+    }
 
     RenderMesh* getMesh() const { return mesh; }
-    ParticleSystem* getParticleSystem() const { return particles; }
-    Vector3 getPosition() const { return position; }
-    
-    Texture* getTexture() const { return texture; }
-	void SetTexture(Texture* tex) { texture = tex; }
+    Material* getMaterial() const { return material; }
 
-    virtual void applyForce(ForceGenerator* gen, float dt) {}
-    virtual void integrate(float dt) {}
-
+    PhysicsObject* getPhysics() {      return physics;
+    }
+  
 };

@@ -3,6 +3,8 @@
 #include <sstream>
 #include <iostream>
 #include <stdexcept>
+#include "../../math_custom/Vector3.h"
+#include "../../math_custom/Mat4.h"
 
 
 static std::string get_file_contents(const char* filename)
@@ -71,3 +73,22 @@ void Shader::checkLinkErrors(GLuint program) {
 void Shader::setFloat(const char* name, float value) {
     glUniform1f(glGetUniformLocation(ID, name), value);
 }
+void Shader::setInt(const char* name, int value) {
+    GLuint texUni = glGetUniformLocation(ID, name);
+    // Shader needs to be activated before changing the value of a uniform
+    Activate();
+    // Sets the value of the uniform
+    glUniform1i(texUni, texUni);
+   
+}
+void Shader::setVec3(const char* name, Vector3 value) {
+    glUniform3f(glGetUniformLocation(ID, name), value.x, value.y, value.z);
+}
+
+void Shader::setVec4(const char* name, Vector3 value, float t) {
+    glUniform4f(glGetUniformLocation(ID, name), value.x, value.y, value.z, t);
+}
+void Shader::setMat4(const char* name, Mat4 value) {
+    glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, value.getData());
+}
+

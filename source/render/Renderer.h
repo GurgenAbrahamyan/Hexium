@@ -10,6 +10,7 @@
 #include "../render/RenderHelpers/Shader.h"
 #include "../core/EngineContext.h"
 #include "../graphics/RenderMesh.h"
+#include "../graphics/Light.h"
 
 class Renderer {
 public:
@@ -17,10 +18,12 @@ public:
 
     void render();
     void setObjects(const std::vector<Object3D*>& objects);
+    void setLights(const std::vector<Light*>& objects);
     GLFWwindow* getWindow() const;
 
 private:
     std::vector<Object3D*>& objectList;
+    std::vector<Light*>& lightsList;
     GLFWwindow* window;
     Camera* camera;
     Shader* shader;
