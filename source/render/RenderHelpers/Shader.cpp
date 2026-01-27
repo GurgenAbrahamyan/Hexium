@@ -17,17 +17,20 @@ static std::string get_file_contents(const char* filename)
     return contents.str();
 }
 
-Shader::Shader(const char* vertexFile, const char* fragmentFile)
+Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* geometryFile)
 {
     std::string vertexCode = get_file_contents(vertexFile);
     std::string fragmentCode = get_file_contents(fragmentFile);
+    std::string geometryCode = get_file_contents(geometryFile);
 
     GLuint vertexShader = compileShader(vertexCode.c_str(), GL_VERTEX_SHADER);
     GLuint fragmentShader = compileShader(fragmentCode.c_str(), GL_FRAGMENT_SHADER);
+//	GLuint geometryShader = compileShader(geometryCode.c_str(), GL_GEOMETRY_SHADER);
 
     ID = glCreateProgram();
     glAttachShader(ID, vertexShader);
     glAttachShader(ID, fragmentShader);
+//	glAttachShader(ID, geometryShader);
     glLinkProgram(ID);
 
     checkLinkErrors(ID);
@@ -78,7 +81,7 @@ void Shader::setInt(const char* name, int value) {
     // Shader needs to be activated before changing the value of a uniform
     Activate();
     // Sets the value of the uniform
-    glUniform1i(texUni, texUni);
+    glUniform1i(texUni, value);
    
 }
 void Shader::setVec3(const char* name, Vector3 value) {
@@ -88,7 +91,12 @@ void Shader::setVec3(const char* name, Vector3 value) {
 void Shader::setVec4(const char* name, Vector3 value, float t) {
     glUniform4f(glGetUniformLocation(ID, name), value.x, value.y, value.z, t);
 }
-void Shader::setMat4(const char* name, Mat4 value) {
-    glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, value.getData());
+void Shader::setMat4(const char* name, const Mat4 mat) {
+
+    GLint loc = glGetUniformLocation(ID, name);
+    if (loc == -1) return;
+
+    glUniformMatrix4fv(loc, 1, GL_FALSE, mat.data);
 }
+
 

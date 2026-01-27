@@ -29,7 +29,7 @@ Camera::Camera(Vector3 pos, Vector3 rot, EventBus* bus)
 }
 
 Camera::Camera(EventBus* bus)
-    : Camera(Vector3(-50, 0, 0), Vector3(0, 0, 0), bus) {
+    : Camera(Vector3(0, 0, 10), Vector3(0, 0, 0), bus) {
 }
 
 void Camera::processKeyboard(char key, float deltaTime) {

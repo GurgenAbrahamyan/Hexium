@@ -2,115 +2,99 @@
 
 #include <vector>
 #include "../dynamics/Particle.h"
-#include "../math_custom/Vector3.h"
 #include "RigidBody.h"
 #include "PhysicsObject.h"
 #include "../graphics/DynamicMesh.h"
-#include "../graphics/TextureManager.h"
-#include <cstdlib>
-#include <ctime>
+#include "../graphics/managers/TextureManager.h"
 
 class Rectangle : public Object3D {
 public:
-
-    Rectangle(Vector3 pos = Vector3(0, 0, 0), Vector3 scale = Vector3(10, 10, 10), float mass = 1.0f) {
-        mesh = nullptr;
-        this->mass = mass;
-        invMass = 1.0f / mass;
+    Rectangle(Vector3 pos = Vector3(0, 0, 0), Vector3 scale = Vector3(1, 1, 1)) {
+        model = new Model();
         this->position = pos;
         this->scale = scale;
-        float hw = 0.5;
-        float hh = 0.5;
-        float hd = 0.5;
 
-        std::vector<float> corners = {
-            -hw, -hh, -hd,  hw, -hh, -hd,
-             hw,  hh, -hd, -hw,  hh, -hd,
-            -hw, -hh,  hd,  hw, -hh,  hd,
-             hw,  hh,  hd, -hw,  hh,  hd
-        };
-
-        
-
-
-        std::vector<unsigned int> indices = {
-            // Front face
-            0, 1, 2,  2, 3, 0,
-            // Back face
-            4, 6, 5,  6, 4, 7,
-            // Left face
-            8, 9, 10,  10, 11, 8,
-            // Right face
-            12, 14, 13,  14, 12, 15,
-            // Top face
-            16, 17, 18,  18, 19, 16,
-            // Bottom face
-            20, 22, 21,  22, 20, 23
-        };
-
-		physics = new RigidBody(pos, mass, scale, corners, indices);
-        dynamic_cast<RigidBody*>(physics)->angularVelocity = Vector3(0, 2, 0);
+        // Simple unit cube from -0.5 to 0.5 on all axes
+        // Engine coordinates: +X right, +Y forward, +Z up
+        float hw = 0.5f;  // half width (X)
+        float hd = 0.5f;  // half depth (Y) 
+        float hh = 0.5f;  // half height (Z)
 
         std::vector<Vertex> vertices = {
-            // Front face (+Z)
-            {{-hw, -hh,  hd}, {1,1,1}, {0,0}, {0,0,1}},
-            {{ hw, -hh,  hd}, {1,1,1}, {1,0}, {0,0,1}},
-            {{ hw,  hh,  hd}, {1,1,1}, {1,1}, {0,0,1}},
-            {{-hw,  hh,  hd}, {1,1,1}, {0,1}, {0,0,1}},
+            // Front face (+Y forward direction)
+            { Vector3(-hw, hd, -hh), Vector3(1,1,1), Vector2(0,0), Vector3(0,1,0) },
+            { Vector3(hw, hd, -hh), Vector3(1,1,1), Vector2(1,0), Vector3(0,1,0) },
+            { Vector3(hw, hd,  hh), Vector3(1,1,1), Vector2(1,1), Vector3(0,1,0) },
+            { Vector3(-hw, hd,  hh), Vector3(1,1,1), Vector2(0,1), Vector3(0,1,0) },
 
-            // Back face (-Z)
-            {{-hw, -hh, -hd}, {1,1,1}, {0,0}, {0,0,-1}},
-            {{ hw, -hh, -hd}, {1,1,1}, {1,0}, {0,0,-1}},
-            {{ hw,  hh, -hd}, {1,1,1}, {1,1}, {0,0,-1}},
-            {{-hw,  hh, -hd}, {1,1,1}, {0,1}, {0,0,-1}},
+            // Back face (-Y back direction)
+            { Vector3(-hw, -hd, -hh), Vector3(1,1,1), Vector2(0,0), Vector3(0,-1,0) },
+            { Vector3(-hw, -hd,  hh), Vector3(1,1,1), Vector2(1,0), Vector3(0,-1,0) },
+            { Vector3(hw, -hd,  hh), Vector3(1,1,1), Vector2(1,1), Vector3(0,-1,0) },
+            { Vector3(hw, -hd, -hh), Vector3(1,1,1), Vector2(0,1), Vector3(0,-1,0) },
 
-            // Left face (-X)
-            {{-hw, -hh, -hd}, {1,1,1}, {0,0}, {-1,0,0}},
-            {{-hw, -hh,  hd}, {1,1,1}, {1,0}, {-1,0,0}},
-            {{-hw,  hh,  hd}, {1,1,1}, {1,1}, {-1,0,0}},
-            {{-hw,  hh, -hd}, {1,1,1}, {0,1}, {-1,0,0}},
+            // Right face (+X right direction)
+            { Vector3(hw, -hd, -hh), Vector3(1,1,1), Vector2(0,0), Vector3(1,0,0) },
+            { Vector3(hw,  hd, -hh), Vector3(1,1,1), Vector2(1,0), Vector3(1,0,0) },
+            { Vector3(hw,  hd,  hh), Vector3(1,1,1), Vector2(1,1), Vector3(1,0,0) },
+            { Vector3(hw, -hd,  hh), Vector3(1,1,1), Vector2(0,1), Vector3(1,0,0) },
 
-            // Right face (+X)
-            {{hw, -hh, -hd}, {1,1,1}, {0,0}, {1,0,0}},
-            {{ hw, -hh,  hd}, {1,1,1}, {1,0}, {1,0,0}},
-            {{ hw,  hh,  hd}, {1,1,1}, {1,1}, {1,0,0}},
-            {{ hw,  hh, -hd}, {1,1,1}, {0,1}, {1,0,0}},
-            
-            // Top face (+Y)
-            {{-hw,  hh,  hd}, {1,1,1}, {0,0}, {0,1,0}},
-            {{ hw,  hh,  hd}, {1,1,1}, {1,0}, {0,1,0}},
-            {{ hw,  hh, -hd}, {1,1,1}, {1,1}, {0,1,0}},
-            {{-hw,  hh, -hd}, {1,1,1}, {0,1}, {0,1,0}},
+            // Left face (-X left direction)
+            { Vector3(-hw, -hd, -hh), Vector3(1,1,1), Vector2(0,0), Vector3(-1,0,0) },
+            { Vector3(-hw, -hd,  hh), Vector3(1,1,1), Vector2(1,0), Vector3(-1,0,0) },
+            { Vector3(-hw,  hd,  hh), Vector3(1,1,1), Vector2(1,1), Vector3(-1,0,0) },
+            { Vector3(-hw,  hd, -hh), Vector3(1,1,1), Vector2(0,1), Vector3(-1,0,0) },
 
-            // Bottom face (-Y)
-            {{-hw, -hh,  hd}, {1,1,1}, {0,0}, {0,-1,0}},
-            {{ hw, -hh,  hd}, {1,1,1}, {1,0}, {0,-1,0}},
-            {{ hw, -hh, -hd}, {1,1,1}, {1,1}, {0,-1,0}},
-            {{-hw, -hh, -hd}, {1,1,1}, {0,1}, {0,-1,0}},
+            // Top face (+Z up direction)
+            { Vector3(-hw,  hd,  hh), Vector3(1,1,1), Vector2(0,0), Vector3(0,0,1) },
+            { Vector3(hw,  hd,  hh), Vector3(1,1,1), Vector2(1,0), Vector3(0,0,1) },
+            { Vector3(hw, -hd,  hh), Vector3(1,1,1), Vector2(1,1), Vector3(0,0,1) },
+            { Vector3(-hw, -hd,  hh), Vector3(1,1,1), Vector2(0,1), Vector3(0,0,1) },
+
+            // Bottom face (-Z down direction)
+            { Vector3(-hw,  hd, -hh), Vector3(1,1,1), Vector2(0,0), Vector3(0,0,-1) },
+            { Vector3(-hw, -hd, -hh), Vector3(1,1,1), Vector2(1,0), Vector3(0,0,-1) },
+            { Vector3(hw, -hd, -hh), Vector3(1,1,1), Vector2(1,1), Vector3(0,0,-1) },
+            { Vector3(hw,  hd, -hh), Vector3(1,1,1), Vector2(0,1), Vector3(0,0,-1) },
         };
 
-        mesh = new DynamicMesh(vertices, indices);
+        std::vector<unsigned int> indices = {
+            // Front
+            0, 1, 2,  2, 3, 0,
+            // Back
+            4, 6, 5,  6, 4, 7,
+            // Right
+            8, 9, 10,  10, 11, 8,
+            // Left
+            12, 13, 14,  14, 15, 12,
+            // Top
+            16, 17, 18,  18, 19, 16,
+            // Bottom
+            20, 21, 22,  22, 23, 20,
+        };
 
-		material = new Material();
-       
+        DynamicMesh* mesh = new DynamicMesh(vertices, indices);
+        Material* material = new Material();
+
+        // Add submesh at local position (0,0,0) with no rotation and scale 1
+        model->addSubMesh(mesh, material, Vector3(0, 0, 0), Quat(), Vector3(1, 1, 1));
+
+        // Create simple physics (no rotation)
+        std::vector<float> corners = {
+            -hw, -hd, -hh,  hw, -hd, -hh,
+             hw,  hd, -hh, -hw,  hd, -hh,
+            -hw, -hd,  hh,  hw, -hd,  hh,
+             hw,  hd,  hh, -hw,  hd,  hh
+        };
+        std::vector<unsigned int> phys_indices = { 0, 1, 2, 2, 3, 0 };
+
+        physics = new RigidBody(pos, 1.0f, scale, corners, phys_indices);
     }
 
     void initializeGPU(TextureManager* manager) override {
-        
-        if (!material) return;
-        material->SetTexture(0, manager->getTexture("resource\\textures\\brick_wall.jpg", TextureUsage::Color));
-        material->SetTexture(1, manager->getTexture("resource\\textures\\brick_wall_specular.png", TextureUsage::Color));
-       
-
- 
-
-
-        if (!mesh) return;
-           mesh->setupBuffers();
-
+        const Model::SubMesh* mesh = &model->getSubMeshes().at(0);
+        mesh->material->SetTexture(0, manager->getTexture(manager->addTexture("resource/textures/brick_wall.jpg")));
+        mesh->material->SetTexture(1, manager->getTexture(manager->addTexture("resource/textures/brick_wall_specular.png")));
+        mesh->mesh->setupBuffers();
     }
-
-  /*  void createCrate(TextureManager* manager) {
-       textures. texture = manager->getTexture("resource\\textures\\crate.jpg");
-    }*/
 };

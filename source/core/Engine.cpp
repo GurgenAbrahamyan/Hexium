@@ -1,5 +1,18 @@
 #include "Engine.h"
-#include <GLFW/glfw3.h>
+
+
+#include "EventBus.h"
+#include "Scene.h"
+#include "../render/Renderer.h"
+#include "PhysicsEngine.h"
+#include "../render/UiRender.h"
+#include "../input/UIInput.h"
+#include "../input/KeyboardInput.h"
+
+#include "../render/camera.h"
+#include "../input/MouseInput.h"
+#include "EngineContext.h"
+
 
 Engine::Engine()
     : bus(new EventBus()),
@@ -18,7 +31,7 @@ Engine::Engine()
     timeSinceLastFpsPrint(0.0f)
 {
     window = EngineContext::get().getWindow();
-    scene->initGpu();
+    scene->initObjects();
     
     renderer->setLights(scene->lightsList());
 

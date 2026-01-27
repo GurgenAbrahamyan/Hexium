@@ -5,7 +5,7 @@
 #include "../dynamics/ForceGenerator.h"
 class PhysicsObject {
 public:
- 
+
     Vector3 position;
     Vector3 velocity;
     Matrix3 orientation;
@@ -17,11 +17,11 @@ public:
     virtual void applyForce(ForceGenerator* gen) = 0;
 
     virtual Matrix3 getOrientation() const {
-		return orientation;
-	}
+        return orientation;
+    }
 
     virtual Vector3 getAngularVelocity() {
-		return Vector3(0, 0, 0);
+        return Vector3(0, 0, 0);
     }
     virtual void setAngularVelocity(const Vector3& angVel) {}
     virtual ~PhysicsObject() = default;

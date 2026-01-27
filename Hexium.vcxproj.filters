@@ -25,9 +25,6 @@
     <Filter Include="Source Files\Engine\render">
       <UniqueIdentifier>{a6b76a48-b6f6-4ba3-bcc4-3c00356aa59f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Engine\dynamics">
-      <UniqueIdentifier>{8b82350a-8028-445d-a4a5-28c90e7a3575}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Engine\math">
       <UniqueIdentifier>{b8d4ed6e-047e-44c1-9682-7e78293edb92}</UniqueIdentifier>
     </Filter>
@@ -55,6 +52,12 @@
     <Filter Include="Source Files\Engine\graphics">
       <UniqueIdentifier>{15b33e9e-30eb-444f-8b12-1250a99638f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine\graphics\managers">
+      <UniqueIdentifier>{7060f996-efef-4067-a602-2e2655741480}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\dynamics">
+      <UniqueIdentifier>{8b82350a-8028-445d-a4a5-28c90e7a3575}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\libraries\glad.c">
@@ -78,9 +81,6 @@
     <ClCompile Include="source\graphics\Texture.cpp">
       <Filter>Source Files\Engine\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="source\graphics\TextureManager.cpp">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="source\graphics\DynamicMesh.cpp">
       <Filter>Source Files\Engine\graphics</Filter>
     </ClCompile>
@@ -102,7 +102,7 @@
     <ClCompile Include="source\shapes\RigidBody.cpp">
       <Filter>Source Files\Engine\shapes</Filter>
     </ClCompile>
-    <ClCompile Include="source\utils\ObjectLoader.cpp">
+    <ClCompile Include="source\utils\ModelLoader.cpp">
       <Filter>Source Files\Engine\utils</Filter>
     </ClCompile>
     <ClCompile Include="source\utils\SceneLoader.cpp">
@@ -116,6 +116,18 @@
     </ClCompile>
     <ClCompile Include="source\graphics\Material.cpp">
       <Filter>Source Files\Engine\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\managers\TextureManager.cpp">
+      <Filter>Source Files\Engine\graphics\managers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\managers\MaterialManager.cpp">
+      <Filter>Source Files\Engine\graphics\managers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\managers\MeshManager.cpp">
+      <Filter>Source Files\Engine\graphics\managers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\managers\ModelManager.cpp">
+      <Filter>Source Files\Engine\graphics\managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,7 +167,7 @@
     <ClInclude Include="source\shapes\Rectangle.h">
       <Filter>Source Files\Engine\shapes</Filter>
     </ClInclude>
-    <ClInclude Include="source\utils\ObjectLoader.h">
+    <ClInclude Include="source\utils\ModelLoader.h">
       <Filter>Source Files\Engine\utils</Filter>
     </ClInclude>
     <ClInclude Include="source\utils\SceneLoader.h">
@@ -200,9 +212,6 @@
     <ClInclude Include="source\shapes\RigidBody.h">
       <Filter>Source Files\Engine\shapes</Filter>
     </ClInclude>
-    <ClInclude Include="source\math_custom\Mat3.h">
-      <Filter>Source Files\Engine\math</Filter>
-    </ClInclude>
     <ClInclude Include="source\utils\TextureLoader.h">
       <Filter>Source Files\Engine\utils</Filter>
     </ClInclude>
@@ -216,9 +225,6 @@
       <Filter>Source Files\Engine\graphics</Filter>
     </ClInclude>
     <ClInclude Include="source\graphics\Texture.h">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="source\graphics\TextureManager.h">
       <Filter>Source Files\Engine\graphics</Filter>
     </ClInclude>
     <ClInclude Include="source\render\RenderHelpers\containers\VBO.h">
@@ -236,6 +242,39 @@
     <ClInclude Include="source\shapes\PhysicsObject.h">
       <Filter>Source Files\Engine\shapes</Filter>
     </ClInclude>
+    <ClInclude Include="Quat.h">
+      <Filter>Source Files\Engine\render\RenderHelpers\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math_custom\Quat.h">
+      <Filter>Source Files\Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\managers\MeshManager.h">
+      <Filter>Source Files\Engine\graphics\managers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\managers\TextureManager.h">
+      <Filter>Source Files\Engine\graphics\managers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\managers\MaterialManager.h">
+      <Filter>Source Files\Engine\graphics\managers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math_custom\Vector2.h">
+      <Filter>Source Files\Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\managers\ModelManager.h">
+      <Filter>Source Files\Engine\graphics\managers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\Model.h">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\SkyBox.h">
+      <Filter>Source Files\Engine\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math_custom\GLAdapter.h">
+      <Filter>Source Files\Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math_custom\Mat3.h">
+      <Filter>Source Files\Engine\math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="resource\Shaders\default.fragment">
@@ -249,5 +288,10 @@
     <Image Include="resource\textures\crate.jpg">
       <Filter>Resource Files\textures</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resource\Shaders\default.geom">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

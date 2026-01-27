@@ -1,3 +1,4 @@
+
 #pragma once
 #pragma once
 #include "../math_custom/Vector3.h"
@@ -34,20 +35,21 @@ public:
 
     
     Vector3 getWorldPosition() const {
-        if (!owner) {
-            return pos;
-        }
+        if (!owner) return pos;
 
+   
         Matrix3 invRot = owner->getOrientation().transpose();
 
-        
-        Vector3 scaled = pos *( owner->getScale());    
-        
-        Vector3 final = (invRot*scaled).add(owner->getPosition());
-		
+
+        Vector3 scaled = pos * (owner->getScale());
+
+        Vector3 final = (invRot * scaled).add(owner->getPosition());
+
         return final;
-       
+
+        return final;
     }
+
     
     void setOwner(Object3D* obj) {
         owner = obj;

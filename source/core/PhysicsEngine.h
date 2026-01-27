@@ -1,8 +1,10 @@
 #pragma once
 
 #include <vector>
-#include "../shapes/Object3D.h"
-#include "../dynamics/ForceGenerator.h"
+
+class Object3D;
+class ForceGenerator;
+
 
 class PhysicsEngine {
 public:

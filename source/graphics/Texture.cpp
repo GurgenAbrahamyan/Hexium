@@ -28,7 +28,6 @@ Texture::Texture(int w, int h, const void* data, const TextureDesc& desc)
 }
 
 
-
 void Texture::Bind(int slot)  {
     glActiveTexture(GL_TEXTURE0 + slot);
     glBindTexture(target, ID);

@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #include "Vector3.h"
 #include <array>
 #include <cmath>
@@ -164,15 +165,15 @@ public:
     static Matrix3 rotationAxisAngle(const Vector3& axis, float angle) {
         Matrix3 R;
 
-        
+
         float c = cosf(angle);
         float s = sinf(angle);
-        float t = 1.0f - c;              
+        float t = 1.0f - c;
         float x = axis.x;
         float y = axis.y;
         float z = axis.z;
 
-        
+
         R.m[0][0] = t * x * x + c;
         R.m[0][1] = t * x * y - s * z;
         R.m[0][2] = t * x * z + s * y;

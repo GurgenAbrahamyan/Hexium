@@ -149,10 +149,13 @@
     <ClCompile Include="source\core\Scene.cpp" />
     <ClCompile Include="source\dynamics\ForceGenerator.cpp" />
     <ClCompile Include="source\graphics\DynamicMesh.cpp" />
+    <ClCompile Include="source\graphics\managers\MaterialManager.cpp" />
+    <ClCompile Include="source\graphics\managers\MeshManager.cpp" />
+    <ClCompile Include="source\graphics\managers\ModelManager.cpp" />
+    <ClCompile Include="source\graphics\managers\TextureManager.cpp" />
     <ClCompile Include="source\graphics\Material.cpp" />
     <ClCompile Include="source\graphics\StaticMesh.cpp" />
     <ClCompile Include="source\graphics\Texture.cpp" />
-    <ClCompile Include="source\graphics\TextureManager.cpp" />
     <ClCompile Include="source\Hexium.cpp" />
     <ClCompile Include="source\input\MouseInput.cpp" />
     <ClCompile Include="source\libraries\glad.c" />
@@ -161,11 +164,12 @@
     <ClCompile Include="source\render\Renderer.cpp" />
     <ClCompile Include="source\render\RenderHelpers\Shader.cpp" />
     <ClCompile Include="source\shapes\RigidBody.cpp" />
-    <ClCompile Include="source\utils\ObjectLoader.cpp" />
+    <ClCompile Include="source\utils\ModelLoader.cpp" />
     <ClCompile Include="source\utils\SceneLoader.cpp" />
     <ClCompile Include="source\utils\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Quat.h" />
     <ClInclude Include="source\core\Engine.h" />
     <ClInclude Include="source\core\EngineContext.h" />
     <ClInclude Include="source\core\Event.h" />
@@ -178,18 +182,26 @@
     <ClInclude Include="source\dynamics\Particle.h" />
     <ClInclude Include="source\graphics\DynamicMesh.h" />
     <ClInclude Include="source\graphics\Light.h" />
+    <ClInclude Include="source\graphics\managers\MaterialManager.h" />
+    <ClInclude Include="source\graphics\managers\MeshManager.h" />
+    <ClInclude Include="source\graphics\managers\ModelManager.h" />
+    <ClInclude Include="source\graphics\managers\TextureManager.h" />
     <ClInclude Include="source\graphics\Material.h" />
+    <ClInclude Include="source\graphics\Model.h" />
     <ClInclude Include="source\graphics\RenderMesh.h" />
+    <ClInclude Include="source\graphics\SkyBox.h" />
     <ClInclude Include="source\graphics\StaticMesh.h" />
     <ClInclude Include="source\graphics\Texture.h" />
-    <ClInclude Include="source\graphics\TextureManager.h" />
     <ClInclude Include="source\graphics\Vertex.h" />
     <ClInclude Include="source\input\KeyBoardInput.h" />
     <ClInclude Include="source\input\MouseInput.h" />
     <ClInclude Include="source\input\UIInput.h" />
     <ClInclude Include="source\math_custom\GeneralFunctions.h" />
+    <ClInclude Include="source\math_custom\GLAdapter.h" />
     <ClInclude Include="source\math_custom\Mat3.h" />
     <ClInclude Include="source\math_custom\Mat4.h" />
+    <ClInclude Include="source\math_custom\Quat.h" />
+    <ClInclude Include="source\math_custom\Vector2.h" />
     <ClInclude Include="source\math_custom\Vector3.h" />
     <ClInclude Include="source\render\Camera.h" />
     <ClInclude Include="source\render\Renderer.h" />
@@ -202,7 +214,7 @@
     <ClInclude Include="source\shapes\PhysicsObject.h" />
     <ClInclude Include="source\shapes\Rectangle.h" />
     <ClInclude Include="source\shapes\RigidBody.h" />
-    <ClInclude Include="source\utils\ObjectLoader.h" />
+    <ClInclude Include="source\utils\ModelLoader.h" />
     <ClInclude Include="source\utils\SceneLoader.h" />
     <ClInclude Include="source\utils\TextureLoader.h" />
   </ItemGroup>
@@ -226,6 +238,9 @@
     <Image Include="resource\textures\crate.jpg">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resource\Shaders\default.geom" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

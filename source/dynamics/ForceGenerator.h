@@ -1,9 +1,9 @@
 #pragma once
 #include <vector>
-#include "../math_custom/Vector3.h"
 
 
 class RigidBody;
+class Vector3;
 
 class ForceGenerator {
 public:

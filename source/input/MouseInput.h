@@ -21,7 +21,7 @@ public:
 
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 			cameraMode = true;
-			CameraMode e(true);
+			CameraMode e = (true);
 			
 			eventbus->publish(e); 
 			glfwSetInputMode(EngineContext::get().getWindow(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);

@@ -1,5 +1,5 @@
 #include "DynamicMesh.h"
-
+#include <iostream>
 
 
 DynamicMesh::DynamicMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& ind)
@@ -27,6 +27,8 @@ int DynamicMesh::indexCount() const {
 
 void DynamicMesh::setupBuffers()
 {
+
+    std::cout << "settin buffers";
     VAO1 = new VAO();
     VAO1->Bind();
 

@@ -1,0 +1,93 @@
+#pragma once
+
+#include <string>
+#include <vector>
+#include <glad/glad.h>
+#include <json/json.h>
+
+#include "../math_custom/Mat4.h"
+#include "../math_custom/Vector3.h"
+#include "../math_custom/Vector2.h"
+
+using json = nlohmann::json;
+
+
+struct Vertex;
+
+
+
+struct MeshData {
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+    std::vector<std::string> texturePaths;
+    std::string name;
+};
+
+struct MaterialData {
+    float metallic = 1.0f;
+    float roughness = 1.0f;
+    float ao = 1.0f;
+    std::vector<std::string> texturePaths;
+    std::string name;
+};
+
+struct NodeData
+{
+    Vector3 position;           
+    Quat rotation;              
+    Vector3 scale;             
+    unsigned int meshIndex;
+    std::string name;
+    std::vector<unsigned int> children;
+};
+
+struct ModelData {
+    std::vector<MeshData> meshes;
+    std::vector<MaterialData> materials;
+    std::vector<NodeData> nodes;
+    std::string modelName;
+};
+
+// ---------------- Loader ----------------
+
+class ModelLoader {
+public:
+    explicit ModelLoader(const std::string& filePath);
+    const ModelData& getModelData() const { return model; }
+
+private:
+    std::string filePath;
+    std::string directory;
+
+    json JSON;
+    std::vector<unsigned char> bufferData;
+    ModelData model;
+
+
+    void parseGLTF();
+    void traverseNode(unsigned int nextNode,
+        const Vector3& parentPos,
+        const Quat& parentRot,
+        const Vector3& parentScale);
+    void parseMesh(unsigned int meshIndex);
+    void parseMaterial(unsigned int materialIndex);
+    std::vector<Vertex> assembleVertices(
+        const std::vector<Vector3>& positions,
+        const std::vector<Vector3>& normals,
+        const std::vector<Vector2>& uvs
+    );
+
+    void bakeTransformToMesh(MeshData& meshData, const Mat4& transform);
+
+    std::vector<Vector3> groupVec3(const std::vector<float>& floats);
+    std::vector<Vector2> groupVec2(const std::vector<float>& floats);
+
+    std::vector<float> getFloats(const json& accessor);
+    std::vector<GLuint> getIndices(const json& accessor);
+    std::vector<std::string> getTexturesForMesh(unsigned int meshIndex);
+
+    std::vector<unsigned char> loadBufferData(const std::string& uri);
+    
+
+    static Mat4 fromArray(const json& arr);
+};

@@ -17,12 +17,12 @@ public:
     float getMass() const;
     Matrix3* getOrientation();
 
-    
-    Vector3 getScale(){ return scale; }
+
+    Vector3 getScale() { return scale; }
     void setScale(const Vector3& s) { scale = s; }
     Vector3 getAngularVelocity() override;
     void setAngularVelocity(const Vector3& angVel)override {
-		angularVelocity = angVel;
+        angularVelocity = angVel;
     }
 
 private:
@@ -35,7 +35,7 @@ public:
     Vector3 velocity;
     Vector3 forceAccum;
 
-    
+
     Vector3 angularVelocity;
-    Vector3 scale;  
+    Vector3 scale;
 };

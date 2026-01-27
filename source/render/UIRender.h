@@ -2,7 +2,7 @@
 
 #include "../core/EventBus.h"
 #include "../core/Event.h"
-#include "../utils/ObjectLoader.h"
+#include "../utils/ModelLoader.h"
 #include <string>
 
 class UiRender {

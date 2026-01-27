@@ -54,12 +54,19 @@ public:
             return;
         }
         if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS) {
-         
+
 
             Vector3 v(0, 0, 3);
-			CreateObject E(v);
+            CreateObject E(v);
             bus->publish(E);
-		
+
+            return;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        {
+            PressedKey Q('Q');
+            bus->publish(Q);
             return;
         }
     }

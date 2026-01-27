@@ -4,16 +4,16 @@
 #include <thread>
 #include <iostream>
 
-#include "EventBus.h"
-#include "Scene.h"
-#include "../render/Renderer.h"
-#include "PhysicsEngine.h"
-#include "../render/UiRender.h"
-#include "../input/UIInput.h"
-#include "../input/KeyboardInput.h"
-#include "EngineContext.h"
-#include "../render/camera.h"
-#include "../input/MouseInput.h"
+class EventBus;
+class Scene;
+class Camera;
+class Renderer;
+class PhysicsEngine;
+class UiInput;
+class UiRender;
+class MouseInput;
+class KeyboardInput;
+class GLFWwindow;
 
 class Engine {
 public:

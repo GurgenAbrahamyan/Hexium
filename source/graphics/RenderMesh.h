@@ -5,7 +5,7 @@
 #include "Vertex.h"
 
 
-class Object3D;
+
 
 class RenderMesh {
 public:
@@ -24,9 +24,21 @@ public:
     std::vector<Vertex>& getVertexes() {
         return vertices;
     }
+    void setID(int i) {
+        ID = i;
+    }
+    int getID() {
+       return ID;
+    }
+
 
 
 protected:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
+
+   
+    int ID = -1;
+
+   
 };

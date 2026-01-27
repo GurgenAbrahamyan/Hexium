@@ -2,15 +2,7 @@
 
 #include <../glad/glad.h>
 #include <cstdint>
-
-
-
-enum TextureUsage {
-    Color,      
-    Specular,   
-    Normal,
-    Data       
-};
+#include <string>
 
 
 
@@ -42,9 +34,13 @@ public:
 
     int getWidth() const { return width; }
     int getHeight() const { return height; }
+	void setID(int id) { globalID = id; }
+	int getID() const { return globalID; }
 
 private:
     GLuint ID = 0;
+    int globalID = -1;
+
     GLenum target = GL_TEXTURE_2D;
     int width = 0;
     int height = 0;

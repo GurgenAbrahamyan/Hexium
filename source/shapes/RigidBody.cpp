@@ -10,7 +10,7 @@ RigidBody::RigidBody(Vector3 pos, float mass, Vector3 scale, const std::vector<f
     position = pos;
     orientation.setIdentity();
 
-	particles = new ParticleSystem(mass);
+    particles = new ParticleSystem(mass);
 
     for (int x = 0; x < vertices.size(); x += 3) {
         Particle* p = new Particle(mass / vertices.size() / 3, Vector3(vertices[x], vertices[x + 1], vertices[x + 2]));
@@ -63,7 +63,3 @@ Matrix3* RigidBody::getOrientation() {
 Vector3 RigidBody::getAngularVelocity() {
     return angularVelocity;
 }
-
-
-
-

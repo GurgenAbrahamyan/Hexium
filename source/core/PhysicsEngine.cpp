@@ -1,3 +1,5 @@
+
+
 #include "PhysicsEngine.h"
 #include "../dynamics/GeneralIntegrators.h"
 #include "../math_custom/Vector3.h"
@@ -9,8 +11,8 @@
 PhysicsEngine::PhysicsEngine(std::vector<Object3D*>& objects)
     : object3DS(objects)
 {
-    Vector3 gravity(0, -9.81f, 0);
-  //  generators.push_back(new GravityGenerator(gravity));
+    Vector3 gravity(0, 0, -9.81f);
+   // generators.push_back(new GravityGenerator(gravity));
 }
 
 PhysicsEngine::~PhysicsEngine() {
@@ -31,3 +33,4 @@ void PhysicsEngine::update(float delta) {
 void PhysicsEngine::setObjects(const std::vector<Object3D*>& objects) {
     object3DS = objects;
 }
+
