@@ -17,8 +17,8 @@ vec4 pointLight(){
 
     vec3 lightVector = lightPos - vCrntPos;
     float distance = length(lightVector);
-    float a = 0.00001;
-    float b = 0.00001;
+    float a = 0.001;
+    float b = 0.001;
     float intensity = 1.0f / ( a * distance * distance + b * distance + 1.0f );
 
     float ambient = 0.2f;
@@ -45,8 +45,8 @@ vec4 directionalLight(){
 
     vec3 lightVector = lightPos - vCrntPos;
     float distance = length(lightVector);
-    float a = 0.0001;
-    float b = 0.0001;
+    float a = 0.001;
+    float b = 0.001;
     float intensity = 1.0f / ( a * distance * distance + b * distance + 1.0f );
 
     float ambient = 0.2f;

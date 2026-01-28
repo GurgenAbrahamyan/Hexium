@@ -21,6 +21,7 @@ struct MeshData {
     std::vector<unsigned int> indices;
     std::vector<std::string> texturePaths;
     std::string name;
+	int materialIndex = -1;
 };
 
 struct MaterialData {
@@ -36,6 +37,7 @@ struct NodeData
     Vector3 position;           
     Quat rotation;              
     Vector3 scale;             
+	Mat4 worldTransform;
     unsigned int meshIndex;
     std::string name;
     std::vector<unsigned int> children;
@@ -66,9 +68,7 @@ private:
 
     void parseGLTF();
     void traverseNode(unsigned int nextNode,
-        const Vector3& parentPos,
-        const Quat& parentRot,
-        const Vector3& parentScale);
+        const Mat4& parentMat);
     void parseMesh(unsigned int meshIndex);
     void parseMaterial(unsigned int materialIndex);
     std::vector<Vertex> assembleVertices(

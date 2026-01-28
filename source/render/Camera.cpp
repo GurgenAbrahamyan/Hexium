@@ -1,10 +1,10 @@
 #include "Camera.h"
 #include <cmath>
-
+#include "../math_custom/GLAdapter.h"
 Camera::Camera(Vector3 pos, Vector3 rot, EventBus* bus)
     : Position(pos),
     Rotation(rot),
-    Front(0, 0, -1),
+    Front(0, 0, 1),
     Up(0, 1, 0),
     Right(1, 0, 0),
     bus(bus)
@@ -29,7 +29,7 @@ Camera::Camera(Vector3 pos, Vector3 rot, EventBus* bus)
 }
 
 Camera::Camera(EventBus* bus)
-    : Camera(Vector3(0, 0, 10), Vector3(0, 0, 0), bus) {
+    : Camera(Vector3(0, 10, 0), Vector3(0, 0, 0), bus) {
 }
 
 void Camera::processKeyboard(char key, float deltaTime) {
@@ -42,9 +42,9 @@ void Camera::processKeyboard(char key, float deltaTime) {
     if (key == 'E') Position = Position.add(Up.multiply(velocity));
 
     std::cout << "Camera Position: ("
-        << Position.getX() << ", "
-        << Position.getY() << ", "
-        << Position.getZ() << ")\n";
+        << GLAdapter::fromGL(Position).getX() << ", "
+        << GLAdapter::fromGL(Position).getY() << ", "
+        << GLAdapter::fromGL(Position).getZ() << ")\n";
 }
 
 void Camera::processMouse(float xoffset, float yoffset) {

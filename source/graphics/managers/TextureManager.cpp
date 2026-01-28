@@ -8,21 +8,26 @@ TextureID TextureManager::addTexture(const std::string& path)
 {
     TextureKey key{ path };
 
-    if (auto it = lookup.find(key); it != lookup.end())
+    
+    if (auto it = lookup.find(key); it != lookup.end()) {
+        std::cout << "Texture already loaded: " << path << " (ID: " << it->second << ")\n";
         return it->second;
+    }
 
     int width = 0, height = 0, channels = 0;
-    stbi_set_flip_vertically_on_load(false);  // you decide what you want
-
+    stbi_set_flip_vertically_on_load(false);
     unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+
     if (!data)
     {
         std::cerr << "Failed to load texture: " << path << "\n";
         return UINT32_MAX;
     }
 
-    // ?? Very important ??
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);   // prevent alignment crash
+    std::cout << "Loading texture: " << path << " (" << width << "x" << height << ", " << channels << " channels)\n";
+
+    // Prevent alignment issues
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     // Choose correct format based on actual channels
     GLenum format = GL_RGBA;
@@ -35,7 +40,8 @@ TextureID TextureManager::addTexture(const std::string& path)
     }
     else if (channels == 4)
     {
-        // already good
+        format = GL_RGBA;
+        internal = GL_RGBA8;
     }
     else if (channels == 1)
     {
@@ -49,24 +55,27 @@ TextureID TextureManager::addTexture(const std::string& path)
         return UINT32_MAX;
     }
 
-    TextureDesc desc;                 
+    TextureDesc desc;
     desc.internalFormat = internal;
     desc.format = format;
 
-  
     auto tex = std::make_unique<Texture>(width, height, data, desc);
-
     stbi_image_free(data);
 
+    // Use vector size as ID
     TextureID id = static_cast<TextureID>(textures.size());
     textures.push_back({ std::move(tex), path });
     lookup[key] = id;
 
+    std::cout << "Texture loaded successfully (ID: " << id << ")\n";
     return id;
 }
 
 Texture* TextureManager::getTexture(TextureID id) {
-    if (id >= textures.size()) return nullptr;
+    if (id >= textures.size()) {
+        std::cerr << "Invalid texture ID: " << id << "\n";
+        return nullptr;
+    }
     return textures[id].texture.get();
 }
 
@@ -79,5 +88,5 @@ TextureID TextureManager::getID(const std::string& path) const {
 }
 
 void TextureManager::NextTexture(EventBus* bus) {
-    
+
 }

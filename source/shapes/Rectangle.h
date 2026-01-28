@@ -77,7 +77,7 @@ public:
         Material* material = new Material();
 
         // Add submesh at local position (0,0,0) with no rotation and scale 1
-        model->addSubMesh(mesh, material, Vector3(0, 0, 0), Quat(), Vector3(1, 1, 1));
+        model->addSubMesh(mesh, material, Vector3(0, 0, 0), Quat(), Vector3(1, 1, 1), Mat4::translate(Vector3(0,0,0))*Mat4::fromQuat(Quat())*Mat4::scale(Vector3(1,1,1)));
 
         // Create simple physics (no rotation)
         std::vector<float> corners = {

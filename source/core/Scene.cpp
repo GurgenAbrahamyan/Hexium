@@ -78,42 +78,68 @@ std::vector<Light*>& Scene::lightsList() {
 
 void Scene::initObjects() {
    
-         //   std::string modelPath = "resource/models/sword/scene.gltf";
-         //     std::string modelPath = "resource/models/map/scene.gltf";
-             std::string modelPath = "resource/models/duck/Duck.gltf";
-       //    std::string modelPath = "resource/models/helmet/DamagedHelmet.gltf"; 
-    // 
-     //        std::string modelPath = "resource/models/toy car/ToyCar.gltf";
-    
-      for (int i = 0; i < 10; i++) {
-          Object3D* obj = new Object3D(nullptr, modelManager->getModel(modelManager->addModel("sword", modelPath)));
-
-          obj->setPosition(Vector3(i, i, i));
-          obj->setScale(Vector3(0.2, 0.2, 0.2));
-		  
           
-         // obj->getPhysics()->setAngularVelocity(Vector3(0, 2, 0));
+          std::string modelPath = "resource/models/chess/chess_set_4k.gltf";
+          
+          Object3D* obj = new Object3D(nullptr, modelManager->getModel(modelManager->addModel("chess", modelPath)));
+
+          obj->setPosition(Vector3(5, 5, 5));
+          obj->getPhysics()->setAngularVelocity(Vector3(0, 0, 2));
+          obj->setScale(Vector3(3, 3, 3));
 
           objects.push_back(obj);
-      }
-   //   objects.push_back(new Rectangle(Vector3(0, 0, 3), Vector3(1, 1, 1)));
-      objects.push_back(new Rectangle(Vector3(-3, 0, 0), Vector3(1, 1, 1)));
+
+        modelPath = "resource/models/map/scene.gltf";
+           obj = new Object3D(nullptr, modelManager->getModel(modelManager->addModel("map", modelPath)));
+
+          obj->setPosition(Vector3(10, 5, 5));
+          obj->getPhysics()->setAngularVelocity(Vector3(0, 0, 2));
+          obj->setScale(Vector3(0.2, 0.2, 0.2));
+
+          objects.push_back(obj);
+        modelPath = "resource/models/duck/Duck.gltf";
+           obj = new Object3D(nullptr, modelManager->getModel(modelManager->addModel("duck", modelPath)));
+
+          obj->setPosition(Vector3(15, 5, 5));
+          obj->getPhysics()->setAngularVelocity(Vector3(0, 0, 2));
+          obj->setScale(Vector3(1, 1, 1));
+
+          objects.push_back(obj);
+       modelPath = "resource/models/helmet/DamagedHelmet.gltf"; 
+          obj = new Object3D(nullptr, modelManager->getModel(modelManager->addModel("helmet", modelPath)));
+
+          obj->setPosition(Vector3(20, 5, 5));
+          obj->getPhysics()->setAngularVelocity(Vector3(0, 0, 2));
+          obj->setScale(Vector3(1, 1, 1));
+
+          objects.push_back(obj);
+     
+            modelPath = "resource/models/toy car/ToyCar.gltf";
+
+            obj = new Object3D(nullptr, modelManager->getModel(modelManager->addModel("car", modelPath)));
+
+            obj->setPosition(Vector3(25, 5, 5));
+            obj->setScale(Vector3(100, 100, 100));
+            obj->getPhysics()->setAngularVelocity(Vector3(0, 0, 2));
+
+            objects.push_back(obj);
+    
+          
+
+      objects.push_back(new Rectangle(Vector3(3, 0, 0), Vector3(1, 1, 1)));
+      objects.push_back(new Rectangle(Vector3(0, 3, 0), Vector3(1, 1, 1)));
+      objects.push_back(new Rectangle(Vector3(0, 0, 3), Vector3(1, 1, 1)));
+
+      objects.push_back(new Rectangle(Vector3(10, 0, 0), Vector3(1, 1, 1)));
+
    
-
-    for (int i = 0; i < 0; i++) {
-        Rectangle* rec = new Rectangle();
-        rec->getPhysics()->position = Vector3( i, i, i);
-		rec->setScale(Vector3(1, 1, 1));
-        rec->getPhysics()->setAngularVelocity(Vector3(0, 2, 0));
-        objects.push_back(rec);
-	}
-
 
 
     Rectangle* background = new Rectangle(Vector3(0, 0, 0), Vector3(500, 500, 500));
 
-    Light* light1 = new Light(Vector3(1, 1, 1), Vector3(0.5, 0.6, 0.5), 1.0f, LightType::Point);
-    light1->setOwner(objects.at(0));
+    Light* light1 = new Light(Vector3(1, 1, 1), Vector3(1,1, 1), 1.0f, LightType::Point);
+    
+	light1->setOwner(objects.at(0));
 
     lights.push_back(light1);
 

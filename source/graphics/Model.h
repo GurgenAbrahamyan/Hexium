@@ -29,8 +29,8 @@ public:
     }
 
     
-    void addSubMesh(RenderMesh* mesh, Material* material, Vector3 position,  Quat rotation,  Vector3 scale) {
-        subMeshes.push_back({ mesh, material, position, rotation, scale});
+    void addSubMesh(RenderMesh* mesh, Material* material, Vector3 position,  Quat rotation,  Vector3 scale, Mat4 localTransform) {
+        subMeshes.push_back({ mesh, material, position, rotation, scale, localTransform});
     }
 
     const std::vector<SubMesh>& getSubMeshes() const { return subMeshes; }

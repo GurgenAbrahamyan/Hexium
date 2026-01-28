@@ -182,7 +182,7 @@ public:
         return r;
     }
 
-   
+
     static Mat4 fromMat3(const Matrix3& mat3) {
         Mat4 m;
         m.data[0] = mat3.m[0][0];

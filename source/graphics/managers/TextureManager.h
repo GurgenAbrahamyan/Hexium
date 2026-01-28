@@ -1,5 +1,4 @@
 #pragma once
-
 #include <../glad/glad.h>
 #include <cstdint>
 #include <string>
@@ -11,9 +10,9 @@
 using TextureID = uint32_t;
 
 class EventBus;
+
 struct TextureKey {
     std::string path;
-
     bool operator==(const TextureKey& other) const {
         return path == other.path;
     }
@@ -34,20 +33,15 @@ class TextureManager {
 public:
     TextureManager() = default;
 
-    
     TextureID addTexture(const std::string& path);
-
-
     Texture* getTexture(TextureID id);
 
-    
     TextureID getID(const std::string& path) const;
-
     void NextTexture(EventBus* bus);
+
+    size_t getTextureCount() const { return textures.size(); }
 
 private:
     std::vector<TextureRecord> textures;
     std::unordered_map<TextureKey, TextureID, TextureKeyHash> lookup;
-
-	TextureID nextID = 0;
 };

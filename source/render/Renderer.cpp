@@ -71,15 +71,28 @@ void Renderer::render() {
 
             
             Mat4 model_engine =
-                Mat4::fromQuat(mesh.rotation) *
-                Mat4::fromMat3(obj->getOrientation()) *
-                Mat4::scale(obj->getScale()) *
-                Mat4::scale(mesh.scale) *
-                Mat4::translate(obj->getPosition()) *
-                Mat4::translate(mesh.position);
-          
-            Mat4 model_gl = GLAdapter::toGL(model_engine);
-            shader->setMat4("model", model_gl);
+                //Mat4::fromQuat(mesh.rotation) *
+                
+               
+
+                Mat4::fromMat3(obj->getOrientation())*
+
+               
+                
+                Mat4::scale(obj->getScale())*
+                
+               
+             
+                
+                Mat4::translate(obj->getPosition())
+             
+               
+                
+
+                ;
+
+            shader->setMat4("model", mesh.localTransform *
+                GLAdapter::toGL(model_engine));
 
             if (mesh.material) {
                 mesh.material->Bind(shader);

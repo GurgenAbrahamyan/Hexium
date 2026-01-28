@@ -16,7 +16,7 @@ namespace GLAdapter {
 
         B.data[0] = 1;   B.data[1] = 0;   B.data[2] = 0;   B.data[3] = 0;   // X stays X
         B.data[4] = 0;   B.data[5] = 0;   B.data[6] = 1;   B.data[7] = 0;   // Z -> Y
-        B.data[8] = 0;   B.data[9] = -1;  B.data[10] = 0;  B.data[11] = 0;  // -Y -> Z
+        B.data[8] = 0;   B.data[9] = 1;  B.data[10] = 0;  B.data[11] = 0;  // -Y -> Z
         B.data[12] = 0;  B.data[13] = 0;  B.data[14] = 0;  B.data[15] = 1;
 
         return B;
@@ -42,9 +42,10 @@ namespace GLAdapter {
     inline Vector3 toGL(const Vector3& v) {
         // Engine (X, Y, Z) -> OpenGL (X, -Z, Y)
         return Vector3(
-            v.x,   // X right -> X right
-            v.z,   // Z up -> Y up
-            -v.y   // Y forward -> -Z backward
+            v.x,
+            v.z,
+            v.y
+            // Y forward -> -Z backward
         );
     }
 
@@ -52,9 +53,12 @@ namespace GLAdapter {
     inline Vector3 fromGL(const Vector3& v) {
         // OpenGL (X, Y, Z) -> Engine (X, -Z, Y)
         return Vector3(
-            v.x,   // X right -> X right
-            -v.z,  // Z backward -> Y forward
-            v.y    // Y up -> Z up
+            // X right -> X right
+            
+            v.x,
+            v.y,
+           
+            v.z    // Y up -> Z up
         );
     }
 
