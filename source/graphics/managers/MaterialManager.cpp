@@ -1,10 +1,29 @@
 #include "MaterialManager.h"
 #include "TextureManager.h"
-#include "../Material.h"
+#include "../resources/Material.h"
+#include "../data/MaterialData.h"
+#include "../../core/EventBus.h"
+#include "../../core/Event.h"
+
+
+
 #include <iostream>
 
-MaterialManager::MaterialManager(TextureManager* texMgr)
-    : textureManager(texMgr) {
+MaterialManager::MaterialManager(TextureManager* texMgr, EventBus* bus)
+    : textureManager(texMgr), bus(bus) {
+
+    bus->subscribe<InitMaterial>([this](InitMaterial& event) {
+        const MaterialData* matData = event.data;
+        this->addMaterial(
+            matData->name,
+            matData->texturePaths,
+            matData->metallic,
+            matData->roughness,
+            matData->ao
+        );
+		event.result = this->getMaterial(this->getMaterialID(matData->name));
+		});
+
 }
 
 int MaterialManager::addMaterial(const std::string& name,

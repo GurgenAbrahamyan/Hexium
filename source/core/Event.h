@@ -1,7 +1,14 @@
 #pragma once
 
-#include "../shapes/Object3D.h"
 
+#include "../math_custom/Vector3.h"
+#include <string.h>
+class MaterialData;
+class MeshData;
+class Material;
+class RenderMesh;
+class ShaderData;
+class Shader;
 class Event {
 };
 
@@ -53,6 +60,57 @@ public:
 
 
 };
+
+
+
+class InitMaterial : Event {
+public:
+    MaterialData* data;
+	Material* result;
+    InitMaterial(MaterialData* data) {
+        this->data = data;
+    }
+
+
+};
+
+
+class InitMesh : Event {
+public:
+    MeshData* data;
+    RenderMesh* result;
+    InitMesh(MeshData* data) {
+        this->data = data;
+    }
+
+
+};
+
+class InitShader : Event {
+public:
+    ShaderData* data;
+    Shader* result;
+
+    InitShader(ShaderData* data) {
+        this->data = data;
+    }
+
+
+};
+
+class GetDefaultShader : Event {
+public:
+    
+    Shader* shader;
+
+    GetDefaultShader() {
+            
+    
+    }
+
+
+};
+
 
 
 

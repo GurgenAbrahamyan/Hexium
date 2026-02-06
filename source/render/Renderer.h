@@ -1,6 +1,6 @@
 #pragma once
-
 #include <vector>
+#include <unordered_map>
 #include <iostream>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -9,24 +9,53 @@
 #include "../math_custom/Mat4.h"
 #include "../render/RenderHelpers/Shader.h"
 #include "../core/EngineContext.h"
-#include "../graphics/RenderMesh.h"
-#include "../graphics/Light.h"
+#include "../graphics/resources/RenderMesh.h"
+#include "../graphics/resources/Light.h"
+#include "../render/GlobalUniformBuffer.h"
+#include "../render/RenderHelpers/ShaderManager.h"
+#include "../core/EventBus.h"
+
+struct MeshBatch {
+    RenderMesh* mesh;
+    std::vector<Mat4> instances;
+
+    MeshBatch() {
+        instances.reserve(128); // Pre-allocate
+    }
+};
+
+using MeshBatchMap = std::unordered_map<RenderMesh*, MeshBatch>;
+using MaterialBatchMap = std::unordered_map<Material*, MeshBatchMap>;
+using ShaderBatchMap = std::unordered_map<Shader*, MaterialBatchMap>;
+
+class Scene;
+class Camera;
 
 class Renderer {
 public:
-    Renderer(std::vector<Object3D*>& objects, Camera* camera);
+    Renderer(EventBus* bus);
+    ~Renderer();
 
-    void render();
-    void setObjects(const std::vector<Object3D*>& objects);
-    void setLights(const std::vector<Light*>& objects);
+    void render(Scene* scene, Camera* camera);
+    void render2(Scene* scene, Camera* camera);
+
     GLFWwindow* getWindow() const;
 
+    // Call this when objects are added/removed from scene
+    void markBatchesDirty() { batchesDirty = true; }
+
 private:
-    std::vector<Object3D*>& objectList;
-    std::vector<Light*>& lightsList;
     GLFWwindow* window;
-    Camera* camera;
-    Shader* shader;
+    UniformBuffer* globalUBO;
+    ShaderBatchMap renderBatches;
+    ShaderManager* shaderManager;
+    EventBus* bus;
+    Shader* shaderObj;
+
+    bool batchesDirty;
+
+    void rebuildBatches(Scene* scene);
+    void updateInstanceData(Scene* scene);
 
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 };

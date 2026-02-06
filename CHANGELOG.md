@@ -1,14 +1,10 @@
 # Changelog
 
-## [0.2.1] - 2026-01-27
+## [0.2.2] - 2026-02-06
 
 ### Added
-- Added ModelLoader
-- Added ModelManager
-- Added Resource managers
-- Optimized object loading
-- Light improvments
+- Added Instanced Rendering (Handles ~60,000 rotating cubes at 60 FPS or ~3,000 duck models)
+- Bug Fixes
 
 ### Known Issues
 - Collision detection not implemented
-- Model's matrix is ignore, but TRS is wroking right

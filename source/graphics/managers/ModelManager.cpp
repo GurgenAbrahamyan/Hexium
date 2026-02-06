@@ -1,22 +1,18 @@
 #include "ModelManager.h"
-
 #include "TextureManager.h"
 #include "MaterialManager.h"
 #include "MeshManager.h"
-
 #include "../../utils/ModelLoader.h"
-#include "../Model.h"
-#include "../../graphics/RenderMesh.h"
-#include "../../graphics/Material.h"
+#include "../resources/Model.h"
+#include "../../graphics/resources/RenderMesh.h"
+#include "../../graphics/resources/Material.h"
+#include "../../core/Eventbus.h"
+#include "../../core/Event.h"
+#include "../data/MeshData.h"
+#include "../data/MaterialData.h"
 
-ModelManager::ModelManager(
-    TextureManager* texMgr,
-    MaterialManager* matMgr,
-    MeshManager* meshMgr
-)
-    : textureManager(texMgr),
-    materialManager(matMgr),
-    meshManager(meshMgr)
+ModelManager::ModelManager(EventBus* bus)
+    : bus(bus)
 {
 }
 
@@ -31,95 +27,86 @@ int ModelManager::addModel(const std::string& name, const std::string& modelPath
 
     std::cout << "Loading model: " << name << " from " << modelPath << "\n";
 
-   
     ModelLoader loader(modelPath);
     const ModelData& data = loader.getModelData();
     auto model = std::make_unique<Model>();
+    int modelID = nextID++;
+    model->setID(modelID);
 
+    // Load all materials
     std::vector<Material*> materialRefs;
     materialRefs.reserve(data.materials.size());
 
     std::cout << "Creating " << data.materials.size() << " materials...\n";
     for (const auto& matData : data.materials)
     {
-        int matID = materialManager->addMaterial(
-            matData.name,
-            matData.texturePaths,
-            matData.metallic,
-            matData.roughness,
-            matData.ao
-        );
-        Material* mat = materialManager->getMaterial(matID);
+        InitMaterial initEvent(const_cast<MaterialData*>(&matData));
+        bus->publish<InitMaterial>(initEvent);
+
+        Material* mat = initEvent.result;
         if (mat) {
             materialRefs.push_back(mat);
-            std::cout << "  Material " << matData.name << " -> ID " << matID << "\n";
+            std::cout << "  Material created -> ID " << mat->getID() << "\n";
         }
         else {
-            std::cerr << "  ERROR: Failed to get material " << matData.name << "\n";
+            std::cerr << "  ERROR: Failed to create material\n";
             materialRefs.push_back(nullptr);
         }
     }
 
+    // Load all meshes and create submeshes
+    std::cout << "Creating " << data.submeshes.size() << " submeshes...\n";
+    int submeshID = 0;
 
-    std::cout << "Creating " << data.meshes.size() << " meshes...\n";
-    for (const auto& node : data.nodes)
+    for (const auto& submeshData : data.submeshes)
     {
-        if (node.meshIndex < 0 || node.meshIndex >= static_cast<int>(data.meshes.size())) {
-            std::cout << "  Skipping node (invalid mesh index)\n";
+        // Validate mesh index
+        if (submeshData.meshIndex >= data.meshes.size()) {
+            std::cerr << "  ERROR: Submesh has invalid mesh index " << submeshData.meshIndex << "\n";
             continue;
         }
+        MeshData meshData = data.meshes[submeshData.meshIndex];
+        meshData.name = name + "::" + submeshData.name;
 
-        const MeshData& meshData = data.meshes[node.meshIndex];
+        InitMesh meshDataEvent(&meshData);
+        bus->publish<InitMesh>(meshDataEvent);
+        RenderMesh* renderMesh = meshDataEvent.result;
 
-        
-        RenderMesh* mesh = meshManager->getMesh(
-            meshManager->addMesh(
-                meshData.name,
-                meshData.vertices,
-                meshData.indices,
-                false
-            )
-        );
-
-        if (!mesh) {
+        if (!renderMesh) {
             std::cerr << "  ERROR: Failed to create mesh " << meshData.name << "\n";
             continue;
         }
 
-       
+        // Get material (may be nullptr if not set)
         Material* material = nullptr;
-        if (meshData.materialIndex >= 0 && meshData.materialIndex < static_cast<int>(materialRefs.size())) {
-            material = materialRefs[meshData.materialIndex];
-            std::cout << "  Node: " << node.name << " -> Mesh: " << meshData.name
-                << " -> Material: " << data.materials[meshData.materialIndex].name << "\n";
-        }
-        else {
-            std::cerr << "  WARNING: Node " << node.name << " has invalid material index "
-                << meshData.materialIndex << " (using first material or none)\n";
-            if (!materialRefs.empty()) {
-                material = materialRefs[0];
-            }
+        if (submeshData.materialIndex != UINT32_MAX && submeshData.materialIndex < materialRefs.size()) {
+            material = materialRefs[submeshData.materialIndex];
         }
 
-       
+        // Add submesh to model with world transform
         model->addSubMesh(
-            mesh,
+            submeshID,
+            renderMesh,
             material,
-            node.position,
-            node.rotation,
-            node.scale,
-            node.worldTransform
+            Vector3(),
+            Quat(),
+            Vector3(),
+            submeshData.worldTransform
         );
+
+        std::cout << "  Submesh created -> ID " << submeshID
+            << " (mesh: " << meshData.name
+            << ", material: " << (material ? std::to_string(material->getID()) : "none") << ")\n";
+
+        submeshID++;
     }
 
-  
-    int id = nextID++;
-    model->setID(id);
-    idMap[id] = std::move(model);
-    nameToIDMap[name] = id;
+    // Store model
+    idMap[modelID] = std::move(model);
+    nameToIDMap[name] = modelID;
 
-    std::cout << "Model loaded successfully! (ID: " << id << ")\n";
-    return id;
+    std::cout << "Model loaded successfully! (ID: " << modelID << ")\n";
+    return modelID;
 }
 
 Model* ModelManager::getModel(int id)

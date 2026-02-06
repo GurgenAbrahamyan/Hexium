@@ -78,9 +78,9 @@ void Shader::setFloat(const char* name, float value) {
 }
 void Shader::setInt(const char* name, int value) {
     GLuint texUni = glGetUniformLocation(ID, name);
-    // Shader needs to be activated before changing the value of a uniform
+    
     Activate();
-    // Sets the value of the uniform
+
     glUniform1i(texUni, value);
    
 }

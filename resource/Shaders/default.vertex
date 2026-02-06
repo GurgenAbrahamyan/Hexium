@@ -1,29 +1,38 @@
 #version 330 core
+
+// Vertex attributes
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec3 aColor;
 layout(location = 2) in vec2 aUV;
 layout(location = 3) in vec3 aNormal;
 
+// Instance matrix (takes locations 4-7 automatically)
+layout(location = 4) in mat4 instanceModel;
+
+// Outputs
 out vec3 vColor;
 out vec2 vUV;
 out vec3 vNormal;
 out vec3 vCrntPos;
 
-uniform mat4 model;
+// Uniforms
 uniform mat4 view;
 uniform mat4 projection;
 
-
 void main()
 {
-    vec4 worldPos = model * vec4(aPos, 1.0);
+    // Transform position to world space
+    vec4 worldPos = instanceModel * vec4(aPos, 1.0);
     vCrntPos = worldPos.xyz;
-
-    mat3 normalMatrix = transpose(inverse(mat3(model)));
+    
+    // Transform normal to world space
+    mat3 normalMatrix = transpose(inverse(mat3(instanceModel)));
     vNormal = normalize(normalMatrix * aNormal);
-
+    
+    // Pass through color and UV
     vColor = aColor;
     vUV = aUV;
-
+    
+    // Final position
     gl_Position = projection * view * worldPos;
 }

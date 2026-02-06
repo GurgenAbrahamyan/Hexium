@@ -1,6 +1,24 @@
 #include "MeshManager.h"
-#include "../DynamicMesh.h"
+#include "../resources/StaticMesh.h"
+#include "../../core/Event.h"
+#include "../../core/EventBus.h"
+#include "../data/MeshData.h"
+MeshManager::MeshManager(EventBus* bus)
+    : bus(bus)
+{
+    bus->subscribe<InitMesh>([this](InitMesh& event) {
 
+        std::cout << "Initializing mesh: " << event.data->name << "\n";
+        MeshID id = this->addMesh(
+			
+            event.data->name,
+            event.data->vertices,
+            event.data->indices,
+            true
+        );
+        event.result = getMesh(id);
+		});
+}
 MeshID MeshManager::addMesh(
     const std::string& name,
     const std::vector<Vertex>& vertices,
@@ -14,9 +32,9 @@ MeshID MeshManager::addMesh(
 
     std::unique_ptr<RenderMesh> mesh;
     if (dynamic)
-        mesh = std::make_unique<DynamicMesh>(vertices, indices);
+        mesh = std::make_unique<StaticMesh>(vertices, indices);
     else
-        mesh = std::make_unique<DynamicMesh>(vertices, indices); // StaticMesh later
+        mesh = std::make_unique<StaticMesh>(vertices, indices); // StaticMesh later
 
 	mesh->setID(id);
 

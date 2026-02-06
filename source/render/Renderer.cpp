@@ -1,11 +1,21 @@
 #include "Renderer.h"
 #include "../math_custom/GLAdapter.h"
+#include "../render/GlobalUniformBuffer.h"
+#include "../graphics/data/GlobalUBOData.h"
+#include "../core/Scene.h"
+#include "Camera.h"
 
 using namespace GLAdapter;
 
-Renderer::Renderer(std::vector<Object3D*>& objects, Camera* camera)
-	: objectList(objects), camera(camera), window(nullptr), shader(nullptr), lightsList(*(new std::vector<Light*>()))
+Renderer::Renderer(EventBus* bus)
+    : window(nullptr),
+    renderBatches(),
+    bus(bus),
+    shaderManager(nullptr),
+    batchesDirty(true)
 {
+    shaderManager = new ShaderManager(bus);
+
     if (!glfwInit()) {
         std::cout << "Failed to initialize GLFW\n";
         return;
@@ -15,7 +25,14 @@ Renderer::Renderer(std::vector<Object3D*>& objects, Camera* camera)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(EngineContext::get().windowWidth, EngineContext::get().windowHeight, "LearnOpenGL", nullptr, nullptr);
+    window = glfwCreateWindow(
+        EngineContext::get().windowWidth,
+        EngineContext::get().windowHeight,
+        "LearnOpenGL",
+        nullptr,
+        nullptr
+    );
+
     if (!window) {
         std::cout << "Failed to create GLFW window\n";
         glfwTerminate();
@@ -31,87 +48,145 @@ Renderer::Renderer(std::vector<Object3D*>& objects, Camera* camera)
 
     EngineContext::get().setWindow(window);
 
-    shader = new Shader("resource\\Shaders\\default.vertex", "resource\\Shaders\\default.fragment", "resource\\Shaders\\default.geom");
+    shaderObj = shaderManager->load(
+        "default",
+        "resource\\Shaders\\default.vertex",
+        "resource\\Shaders\\default.fragment",
+        "resource\\Shaders\\default.geom"
+    );
 
+    globalUBO = new UniformBuffer(sizeof(GlobalUBOData), 0);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK);
-    //glFrontFace(GL_CW);  // ? Try GL_CW instead of GL_CCW due to coordinate flip
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-
 }
-void Renderer::render() {
-    glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    shader->Activate();
 
-    shader->setMat4("view", camera->getViewMatrix());
-    shader->setMat4("projection", camera->getProjectionMatrix());
-    shader->setVec3("cameraPos", camera->getPosition());
+Renderer::~Renderer() {
+    delete globalUBO;
+    delete shaderManager;
 
-   
-
-    for (Light* light : lightsList) {
-        shader->setVec4("lightColor", light->getColor(), 1.0f);
-        Vector3 lightPos_engine = light->getWorldPosition();
-        Vector3 lightPos_gl = GLAdapter::toGL(lightPos_engine);
-        shader->setVec3("lightPos", lightPos_gl);
+    if (window) {
+        glfwDestroyWindow(window);
+        glfwTerminate();
     }
+}
 
-    for (auto obj : objectList) {
-        for (Model::SubMesh mesh : obj->getModel()->getSubMeshes()) {
-            if (!mesh.mesh) continue;
-            mesh.mesh->bind();
+void Renderer::rebuildBatches(Scene* scene) {
+    renderBatches.clear();
 
-            
-            Mat4 model_engine =
-                //Mat4::fromQuat(mesh.rotation) *
-                
-               
+    std::vector<Object3D*>& objectList = scene->objectList();
 
-                Mat4::fromMat3(obj->getOrientation())*
 
-               
-                
-                Mat4::scale(obj->getScale())*
-                
-               
-             
-                
-                Mat4::translate(obj->getPosition())
-             
-               
-                
+    for (auto* obj : objectList) {
+        for (auto& sub : obj->getModel()->getSubMeshes()) {
+            if (!sub.mesh || !sub.material) continue;
 
-                ;
+         
+            auto& materialMap = renderBatches[shaderObj];
+            auto& meshMap = materialMap[sub.material];
+            auto& batch = meshMap[sub.mesh];
 
-            shader->setMat4("model", mesh.localTransform *
-                GLAdapter::toGL(model_engine));
-
-            if (mesh.material) {
-                mesh.material->Bind(shader);
-            }
-            glDrawElements(GL_TRIANGLES, mesh.mesh->indexCount(), GL_UNSIGNED_INT, 0);
+            batch.mesh = sub.mesh;
+           
         }
     }
+}
+
+void Renderer::updateInstanceData(Scene* scene) {
+    std::vector<Object3D*>& objectList = scene->objectList();
+
+    // Clear instance data but keep allocated memory
+    for (auto& [shader, materialMap] : renderBatches) {
+        for (auto& [material, meshMap] : materialMap) {
+            for (auto& [mesh, batch] : meshMap) {
+                batch.instances.clear();
+            }
+        }
+    }
+
+
+    for (auto* obj : objectList) {
+        for (auto& sub : obj->getModel()->getSubMeshes()) {
+            if (!sub.mesh || !sub.material) continue;
+
+            Mat4 model = sub.localTransform *
+                GLAdapter::toGL(
+                    Mat4::fromMat3(obj->getOrientation()) *
+                    Mat4::scale(obj->getScale()) *
+                    Mat4::translate(obj->getPosition())
+                );
+
+            renderBatches[shaderObj][sub.material][sub.mesh].instances.push_back(model);
+        }
+    }
+}
+
+void Renderer::render(Scene* scene, Camera* camera) {
+    glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    std::vector<Light*>& lightsList = scene->lightsList();
+
+    
+    if (batchesDirty) {
+        rebuildBatches(scene);
+        batchesDirty = false;
+    }
+
+
+    updateInstanceData(scene);
+
+  
+    shaderObj->Activate();
+    shaderObj->setMat4("view", camera->getViewMatrix());
+    shaderObj->setMat4("projection", camera->getProjectionMatrix());
+    shaderObj->setVec3("cameraPos", camera->getPosition());
+
+    for (Light* light : lightsList) {
+        shaderObj->setVec4("lightColor", light->getColor(), 1.0f);
+        Vector3 lightPos_engine = light->getWorldPosition();
+        Vector3 lightPos_gl = GLAdapter::toGL(lightPos_engine);
+        shaderObj->setVec3("lightPos", lightPos_gl);
+    }
+
+    for (auto& [shader, materialMap] : renderBatches) {
+        // Shader already activated above
+
+        for (auto& [material, meshMap] : materialMap) {
+            material->Bind(shader);
+
+            for (auto& [mesh, batch] : meshMap) {
+                if (batch.instances.empty()) continue;
+
+                mesh->bind();
+                mesh->setupInstanceVBO(batch.instances.size());
+
+                glBindBuffer(GL_ARRAY_BUFFER, mesh->getInstanceVBO());
+                glBufferSubData(
+                    GL_ARRAY_BUFFER,
+                    0,
+                    batch.instances.size() * sizeof(Mat4),
+                    batch.instances.data()
+                );
+
+                glDrawElementsInstanced(
+                    GL_TRIANGLES,
+                    mesh->indexCount(),
+                    GL_UNSIGNED_INT,
+                    0,
+                    batch.instances.size()
+                );
+            }
+        }
+    }
+
     glfwSwapBuffers(window);
 }
 
-void Renderer::setObjects(const std::vector<Object3D*>& objects) {
-    objectList = objects;
-}
-void Renderer::setLights(const std::vector<Light*>& lights) {
-    
-    
-
-    lightsList = lights;
-}
 GLFWwindow* Renderer::getWindow() const {
     return window;
 }

@@ -1,56 +1,21 @@
 #pragma once
-
 #include <string>
 #include <vector>
 #include <glad/glad.h>
 #include <json/json.h>
-
 #include "../math_custom/Mat4.h"
 #include "../math_custom/Vector3.h"
 #include "../math_custom/Vector2.h"
+#include "../math_custom/Quat.h"
+#include "../graphics/data/ModelData.h"
 
 using json = nlohmann::json;
 
-
 struct Vertex;
+struct MeshData;
+struct MaterialData;
+struct SubMeshData;
 
-
-
-struct MeshData {
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<std::string> texturePaths;
-    std::string name;
-	int materialIndex = -1;
-};
-
-struct MaterialData {
-    float metallic = 1.0f;
-    float roughness = 1.0f;
-    float ao = 1.0f;
-    std::vector<std::string> texturePaths;
-    std::string name;
-};
-
-struct NodeData
-{
-    Vector3 position;           
-    Quat rotation;              
-    Vector3 scale;             
-	Mat4 worldTransform;
-    unsigned int meshIndex;
-    std::string name;
-    std::vector<unsigned int> children;
-};
-
-struct ModelData {
-    std::vector<MeshData> meshes;
-    std::vector<MaterialData> materials;
-    std::vector<NodeData> nodes;
-    std::string modelName;
-};
-
-// ---------------- Loader ----------------
 
 class ModelLoader {
 public:
@@ -77,17 +42,17 @@ private:
         const std::vector<Vector2>& uvs
     );
 
-    void bakeTransformToMesh(MeshData& meshData, const Mat4& transform);
+  //  void bakeTransformToMesh(MeshData& meshData, const Mat4& transform);
 
     std::vector<Vector3> groupVec3(const std::vector<float>& floats);
     std::vector<Vector2> groupVec2(const std::vector<float>& floats);
 
     std::vector<float> getFloats(const json& accessor);
     std::vector<GLuint> getIndices(const json& accessor);
-    std::vector<std::string> getTexturesForMesh(unsigned int meshIndex);
+ //   std::vector<std::string> getTexturesForMesh(unsigned int meshIndex);
 
     std::vector<unsigned char> loadBufferData(const std::string& uri);
-    
+
 
     static Mat4 fromArray(const json& arr);
 };

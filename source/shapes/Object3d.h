@@ -1,15 +1,15 @@
 #pragma once
 
 #include <vector>
-#include "../graphics/RenderMesh.h"
-#include "../graphics/Material.h"
+#include "../graphics/resources/RenderMesh.h"
+#include "../graphics/resources/Material.h"
 #include "../graphics/managers/TextureManager.h"
 #include "../shapes/PhysicsObject.h"
 #include "../shapes/RigidBody.h"
 #include "../math_custom/Vector3.h"
 #include "../dynamics/ForceGenerator.h"
 #include "../math_custom/Quat.h"
-#include "../graphics/Model.h"
+#include "../graphics/resources/Model.h"
 
 class Object3D {
 protected:

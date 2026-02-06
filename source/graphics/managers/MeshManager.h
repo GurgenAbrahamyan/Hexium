@@ -4,14 +4,16 @@
 #include <vector>
 #include <string>
 
-#include "../RenderMesh.h"
-#include "../Vertex.h"
+#include "../resources/RenderMesh.h"
 
+#include "../data/Vertex.h"
+
+class EventBus;
 using MeshID = int;
 
 class MeshManager {
 public:
-    MeshManager() = default;
+    MeshManager(EventBus* bus);
 
     MeshID addMesh(
         const std::string& name,
@@ -30,4 +32,6 @@ private:
     std::unordered_map<std::string, MeshID> nameToID;
 
     MeshID nextID = 0;
+
+    EventBus* bus;
 };

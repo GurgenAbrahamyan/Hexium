@@ -5,6 +5,7 @@
 #include <vector>
 
 class Material;
+class EventBus;
 class TextureManager;
 
 // Define standard texture slot indices
@@ -19,7 +20,7 @@ enum class TextureSlot {
 
 class MaterialManager {
 public:
-    MaterialManager(TextureManager* texMgr);
+    MaterialManager(TextureManager* texMgr, EventBus* bus);
 
     int addMaterial(const std::string& name,
         const std::vector<std::string>& texturePaths,
@@ -32,7 +33,10 @@ public:
 
 private:
     TextureManager* textureManager;
+    EventBus* bus;
     std::unordered_map<int, std::unique_ptr<Material>> idMap;
     std::unordered_map<std::string, int> nameToIDMap;
     int nextID = 0;
+
+
 };

@@ -58,6 +58,12 @@
     <Filter Include="Source Files\Engine\dynamics">
       <UniqueIdentifier>{8b82350a-8028-445d-a4a5-28c90e7a3575}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine\graphics\resources">
+      <UniqueIdentifier>{c8134240-fb64-4ce8-b5b5-c24a12879e3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\graphics\data">
+      <UniqueIdentifier>{6554055e-3cf7-4248-b0c1-922adc468640}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\libraries\glad.c">
@@ -77,15 +83,6 @@
     </ClCompile>
     <ClCompile Include="source\core\Engine.cpp">
       <Filter>Source Files\Engine\core</Filter>
-    </ClCompile>
-    <ClCompile Include="source\graphics\Texture.cpp">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\graphics\DynamicMesh.cpp">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="source\graphics\StaticMesh.cpp">
-      <Filter>Source Files\Engine\graphics</Filter>
     </ClCompile>
     <ClCompile Include="source\input\MouseInput.cpp">
       <Filter>Source Files\Engine\input</Filter>
@@ -114,9 +111,6 @@
     <ClCompile Include="source\Hexium.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="source\graphics\Material.cpp">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="source\graphics\managers\TextureManager.cpp">
       <Filter>Source Files\Engine\graphics\managers</Filter>
     </ClCompile>
@@ -128,6 +122,21 @@
     </ClCompile>
     <ClCompile Include="source\graphics\managers\ModelManager.cpp">
       <Filter>Source Files\Engine\graphics\managers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\resources\Material.cpp">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\resources\Texture.cpp">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\resources\StaticMesh.cpp">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="source\render\RenderHelpers\ShaderManager.cpp">
+      <Filter>Source Files\Engine\render\RenderHelpers</Filter>
+    </ClCompile>
+    <ClCompile Include="source\shapes\Rectangle.cpp">
+      <Filter>Source Files\Engine\shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -215,35 +224,11 @@
     <ClInclude Include="source\utils\TextureLoader.h">
       <Filter>Source Files\Engine\utils</Filter>
     </ClInclude>
-    <ClInclude Include="source\graphics\DynamicMesh.h">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="source\graphics\RenderMesh.h">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="source\graphics\StaticMesh.h">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="source\graphics\Texture.h">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="source\render\RenderHelpers\containers\VBO.h">
       <Filter>Source Files\Engine\render\RenderHelpers\containers</Filter>
     </ClInclude>
-    <ClInclude Include="source\graphics\Vertex.h">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="source\graphics\Light.h">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="source\graphics\Material.h">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="source\shapes\PhysicsObject.h">
       <Filter>Source Files\Engine\shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="Quat.h">
-      <Filter>Source Files\Engine\render\RenderHelpers\containers</Filter>
     </ClInclude>
     <ClInclude Include="source\math_custom\Quat.h">
       <Filter>Source Files\Engine\math</Filter>
@@ -263,17 +248,59 @@
     <ClInclude Include="source\graphics\managers\ModelManager.h">
       <Filter>Source Files\Engine\graphics\managers</Filter>
     </ClInclude>
-    <ClInclude Include="source\graphics\Model.h">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="source\graphics\SkyBox.h">
-      <Filter>Source Files\Engine\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="source\math_custom\GLAdapter.h">
       <Filter>Source Files\Engine\math</Filter>
     </ClInclude>
     <ClInclude Include="source\math_custom\Mat3.h">
       <Filter>Source Files\Engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\resources\Material.h">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\resources\Model.h">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\resources\RenderMesh.h">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\resources\SkyBox.h">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\resources\Texture.h">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\resources\StaticMesh.h">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\resources\Light.h">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\data\MaterialData.h">
+      <Filter>Source Files\Engine\graphics\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\data\MeshData.h">
+      <Filter>Source Files\Engine\graphics\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\data\Vertex.h">
+      <Filter>Source Files\Engine\graphics\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\data\SubMeshData.h">
+      <Filter>Source Files\Engine\graphics\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\data\ModelData.h">
+      <Filter>Source Files\Engine\graphics\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\data\GlobalUBOData.h">
+      <Filter>Source Files\Engine\graphics\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\RenderHelpers\ShaderManager.h">
+      <Filter>Source Files\Engine\render\RenderHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\GlobalUniformBuffer.h">
+      <Filter>Source Files\Engine\render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\data\ShaderData.h">
+      <Filter>Source Files\Engine\graphics\data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

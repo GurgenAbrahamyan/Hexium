@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
-#include "../Texture.h"
+#include "../resources/Texture.h"
 
 using TextureID = uint32_t;
 

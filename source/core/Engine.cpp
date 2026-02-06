@@ -18,7 +18,7 @@ Engine::Engine()
     : bus(new EventBus()),
     scene(new Scene(bus)),
     camera(new Camera(bus)),
-    renderer(new Renderer(scene->objectList(), camera)),
+    renderer(new Renderer(bus)),
     physicsEngine(new PhysicsEngine(scene->objectList())),
     ui(new UiInput(bus)),
     uiRender(new UiRender()),
@@ -32,8 +32,8 @@ Engine::Engine()
 {
     window = EngineContext::get().getWindow();
     scene->initObjects();
+	renderer->markBatchesDirty();
     
-    renderer->setLights(scene->lightsList());
 
     
     
@@ -75,7 +75,7 @@ void Engine::run() {
 		
         mouseInput->proccessInput();
         ui->processInput();
-        renderer->render();
+        renderer->render(scene, camera);
 
         glfwPollEvents();
 

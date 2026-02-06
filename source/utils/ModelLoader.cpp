@@ -2,10 +2,16 @@
 #include <fstream>
 #include <cstring>
 #include <stdexcept>
-#include "../graphics/Vertex.h"
+#include "../graphics/data/Vertex.h"
+#include "../graphics/data/MaterialData.h"
+#include "../graphics/data/MeshData.h"
+#include "../graphics/data/ModelData.h"
+#include "../graphics/data/SubMeshData.h"
+
 #include "../math_custom/Quat.h"
 #include "math.h"
 #include "../math_custom/GLAdapter.h"
+
 
 
 // ---------------- Constructor ----------------
@@ -19,14 +25,13 @@ ModelLoader::ModelLoader(const std::string& filePath)
     file >> JSON;
     file.close();
 
-
     bufferData = loadBufferData(JSON["buffers"][0]["uri"]);
     parseGLTF();
 }
 
 void ModelLoader::parseGLTF()
 {
-    Mat4 identityMat; 
+    Mat4 identityMat;
     int sceneIndex = JSON.value("scene", 0);
     const json& scene = JSON["scenes"][sceneIndex];
 
@@ -49,29 +54,23 @@ void ModelLoader::traverseNode(unsigned int nextNode, const Mat4& parentMat)
     std::string nodeName = node.value("name", "node_" + std::to_string(nextNode));
     std::cout << "Parsing node: " << nodeName << "\n";
 
-
     Mat4 matNode;
 
     if (node.find("matrix") != node.end())
     {
-  
         for (unsigned int i = 0; i < node["matrix"].size(); i++)
             matNode.data[i] = (node["matrix"][i]);
-   
     }
-
-    else {
-
-
+    else
+    {
         Vector3 localTranslation(0.0f, 0.0f, 0.0f);
         if (node.contains("translation"))
         {
             Vector3 gltf_t(node["translation"][0], node["translation"][1], node["translation"][2]);
 
-            localTranslation.x = gltf_t.x;   // right
-            localTranslation.y = gltf_t.y; // forward (GLTF Z -> Engine Y)
-            localTranslation.z = gltf_t.z;  // up (GLTF Y -> Engine Z)
-
+            localTranslation.x = gltf_t.x;
+            localTranslation.y = gltf_t.y;
+            localTranslation.z = gltf_t.z;
 
             std::cout << "Local Translation: " << localTranslation.x << ", " << localTranslation.y << ", " << localTranslation.z << "\n";
         }
@@ -79,15 +78,12 @@ void ModelLoader::traverseNode(unsigned int nextNode, const Mat4& parentMat)
         Quat localRotation; // Identity
         if (node.contains("rotation"))
         {
-
             Quat gltf_q(node["rotation"][0], node["rotation"][1], node["rotation"][2], node["rotation"][3]);
 
             localRotation.x = gltf_q.x;
             localRotation.y = gltf_q.y;
             localRotation.z = gltf_q.z;
             localRotation.w = gltf_q.w;
-
-		
 
             std::cout << "Local Rotation: " << localRotation.x << ", " << localRotation.y << ", " << localRotation.z << ", " << localRotation.w << "\n";
         }
@@ -110,28 +106,36 @@ void ModelLoader::traverseNode(unsigned int nextNode, const Mat4& parentMat)
     }
 
     Mat4 worldMat = parentMat * matNode;
+
     if (node.contains("mesh"))
     {
         unsigned int meshInd = node["mesh"];
         parseMesh(meshInd);
 
-        MeshData& meshData = model.meshes.back();
-
-        NodeData nodeData;
-        //odeData.position = worldPosition;
-        //nodeData.rotation = worldRotation;
-        //nodeData.scale = local
-        nodeData.worldTransform = worldMat;
-        nodeData.meshIndex = model.meshes.size() - 1;
-        nodeData.name = nodeName;
-
-        if (node.contains("children"))
+        // Parse primitives to get material info
+        const json& mesh = JSON["meshes"][meshInd];
+        for (size_t primIndex = 0; primIndex < mesh["primitives"].size(); primIndex++)
         {
-            for (auto& c : node["children"])
-                nodeData.children.push_back(c);
-        }
+            const json& prim = mesh["primitives"][primIndex];
 
-        model.nodes.push_back(nodeData);
+            unsigned int materialIndex = 0;
+            if (prim.contains("material"))
+            {
+                materialIndex = prim["material"];
+                parseMaterial(materialIndex);
+            }
+
+            // Create SubMeshData entry
+            SubMeshData subMeshData;
+            subMeshData.worldTransform = worldMat;
+            subMeshData.meshIndex = model.meshes.size() - mesh["primitives"].size() + primIndex;
+            subMeshData.materialIndex = materialIndex;
+            subMeshData.name = nodeName + "_submesh_" + std::to_string(primIndex);
+
+            model.submeshes.push_back(subMeshData);
+
+            std::cout << "Created submesh: " << subMeshData.name << " (mesh: " << subMeshData.meshIndex << ", material: " << subMeshData.materialIndex << ")\n";
+        }
     }
 
     if (node.contains("children"))
@@ -140,38 +144,16 @@ void ModelLoader::traverseNode(unsigned int nextNode, const Mat4& parentMat)
             traverseNode(child, worldMat);
     }
 }
-/*void ModelLoader::bakeTransformToMesh(MeshData& meshData, const Mat4& transform)
-{
-   
-   // Mat4 rotationOnly = Mat4::fromQuat(Quat::fromMat4(transform));
 
-    for (Vertex& v : meshData.vertices)
-    {
-        // Transform position by full transform
-       // Vector3 transformedPos = transform.transformPoint(v.position);
-        v.position = transformedPos;
-
-        // Transform normal by rotation only
-     //   Vector3 transformedNorm = rotationOnly.transformDirection(v.normal);
-        v.normal = transformedNorm.normalize();
-    }
-
-    std::cout << "Baked transform into " << meshData.name << " vertices\n";
-}
-*/
 void ModelLoader::parseMesh(unsigned int meshIndex)
 {
     const json& mesh = JSON["meshes"][meshIndex];
 
-   
-
     for (auto& prim : mesh["primitives"])
     {
-
-        const json& prim = mesh["primitives"][0];
-
-
         unsigned int posAcc = prim["attributes"]["POSITION"];
+
+      
         unsigned int normAcc = prim["attributes"]["NORMAL"];
         unsigned int uvAcc = prim["attributes"]["TEXCOORD_0"];
         unsigned int indAcc = prim["indices"];
@@ -183,17 +165,9 @@ void ModelLoader::parseMesh(unsigned int meshIndex)
         MeshData meshData;
         meshData.vertices = assembleVertices(positions, normals, uvs);
         meshData.indices = getIndices(JSON["accessors"][indAcc]);
-        meshData.texturePaths = getTexturesForMesh(meshIndex);
-
-
         meshData.name = mesh.value("name", "mesh_" + std::to_string(meshIndex));
+
         std::cout << "Parsed mesh: " << meshData.name << " with " << meshData.vertices.size() << " vertices and " << meshData.indices.size() << " indices.\n";
-        if (prim.contains("material"))
-        {
-            meshData.materialIndex = prim["material"];
-            unsigned int matIndex = prim["material"];
-            parseMaterial(matIndex);
-        }
 
         model.meshes.push_back(meshData);
     }
@@ -201,7 +175,6 @@ void ModelLoader::parseMesh(unsigned int meshIndex)
 
 void ModelLoader::parseMaterial(unsigned int materialIndex)
 {
-
     if (materialIndex < model.materials.size())
         return;
 
@@ -292,6 +265,7 @@ std::vector<Vertex> ModelLoader::assembleVertices(
     }
     return vertices;
 }
+
 std::vector<Vector3> ModelLoader::groupVec3(const std::vector<float>& floats) {
     std::vector<Vector3> out;
     for (size_t i = 0; i < floats.size(); i += 3) {
@@ -300,8 +274,8 @@ std::vector<Vector3> ModelLoader::groupVec3(const std::vector<float>& floats) {
         float gltf_z = floats[i + 2];
 
         Vector3 v;
-        v.x = gltf_x;  // flip X to make +X point right
-        v.y = gltf_y; // up stays up
+        v.x = gltf_x;
+        v.y = gltf_y;
         v.z = gltf_z;
 
         out.emplace_back(v);
@@ -316,6 +290,7 @@ std::vector<Vector2> ModelLoader::groupVec2(const std::vector<float>& floats)
         out.emplace_back(floats[i], floats[i + 1]);
     return out;
 }
+
 std::vector<float> ModelLoader::getFloats(const json& accessor)
 {
     std::vector<float> floatVec;
@@ -342,6 +317,7 @@ std::vector<float> ModelLoader::getFloats(const json& accessor)
     }
     return floatVec;
 }
+
 std::vector<GLuint> ModelLoader::getIndices(const json& accessor)
 {
     std::vector<GLuint> indices;
@@ -372,24 +348,9 @@ std::vector<GLuint> ModelLoader::getIndices(const json& accessor)
     }
     return indices;
 }
-std::vector<std::string> ModelLoader::getTexturesForMesh(unsigned int)
-{
-    std::vector<std::string> textures;
-    if (!JSON.contains("images")) return textures;
-    for (unsigned int i = 0; i < JSON["images"].size(); i++)
-    {
-        std::string texPath = JSON["images"][i]["uri"];
-        if (texPath.find("baseColor") != std::string::npos ||
-            texPath.find("metallicRoughness") != std::string::npos)
-        {
-            textures.push_back(directory + texPath);
-        }
-    }
-    return textures;
-}
+
 std::vector<unsigned char> ModelLoader::loadBufferData(const std::string& uri)
 {
-
     std::ifstream file(directory + uri, std::ios::binary);
 
     if (!file.is_open())
@@ -399,6 +360,7 @@ std::vector<unsigned char> ModelLoader::loadBufferData(const std::string& uri)
         std::istreambuf_iterator<char>()
     );
 }
+
 Mat4 ModelLoader::fromArray(const json& arr)
 {
     Mat4 m;
@@ -406,5 +368,3 @@ Mat4 ModelLoader::fromArray(const json& arr)
         m.data[i] = arr[i];
     return m;
 }
-
- 
