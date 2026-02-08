@@ -14,6 +14,7 @@ class UiRender;
 class MouseInput;
 class KeyboardInput;
 class GLFWwindow;
+struct RenderContext;
 
 class Engine {
 public:
@@ -35,6 +36,7 @@ private:
     MouseInput* mouseInput;
     KeyboardInput* keyboardInput;
 
+	RenderContext* renderContext;
     GLFWwindow* window;
 
     bool running;

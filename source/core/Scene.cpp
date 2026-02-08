@@ -95,7 +95,21 @@ std::vector<Light*>& Scene::lightsList() {
 
 void Scene::initObjects() {
    
-          
+	     /* skybox = textureManager->loadCubeMap({
+              "resource/textures/skymap.png"
+			  });*/
+    std::vector<std::string> faces = {
+    "resource/textures/skybox/right.jpg",   // +X
+    "resource/textures/skybox/left.jpg",    // -X
+    "resource/textures/skybox/top.jpg",     // +Y
+    "resource/textures/skybox/bottom.jpg",  // -Y
+    "resource/textures/skybox/front.jpg",  // +Z
+    "resource/textures/skybox/back.jpg",    // -Z
+    };
+     
+          skybox = textureManager->loadCubeMapArray(faces);
+    
+
           std::string modelPath = "resource/models/chess/chess_set_4k.gltf";
           
           Object3D* obj = new Object3D(nullptr, modelManager->getModel(modelManager->addModel("chess", modelPath)));
@@ -174,7 +188,7 @@ void Scene::initObjects() {
    
 
 
-    Rectangle* background = new Rectangle(Vector3(0, 0, 0), Vector3(500, 500, 500));
+
 
     Light* light1 = new Light(Vector3(1, 1, 1), Vector3(1,1, 1), 1.0f, LightType::Point);
     
@@ -184,13 +198,7 @@ void Scene::initObjects() {
 
 
 
-    background->getPhysics()->setAngularVelocity(Vector3(0, 0, 0));;
-
-
-    background->getPhysics()->position = Vector3(0, 0, 0);
-
-
-    objects.push_back(background);
+  
 
 
 

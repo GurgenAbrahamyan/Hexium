@@ -58,7 +58,7 @@ void StaticMesh::setupInstanceVBO(size_t instanceCount) {
         setupBuffers();
     }
 
-    
+
     size_t newCapacity = instanceCount + (instanceCount / 2);
 
     if (instanceVBO == 0) {
@@ -76,18 +76,18 @@ void StaticMesh::setupInstanceVBO(size_t instanceCount) {
     );
 
 
-   
+
     for (int i = 0; i < 4; i++) {
         glEnableVertexAttribArray(4 + i);
         glVertexAttribPointer(
-            4 + i,                      
-            4,                         
-            GL_FLOAT,                   
-            GL_FALSE,                   
-            sizeof(Mat4),               
-            (void*)(sizeof(float) * 4 * i)  
+            4 + i,
+            4,
+            GL_FLOAT,
+            GL_FALSE,
+            sizeof(Mat4),
+            (void*)(sizeof(float) * 4 * i)
         );
-        glVertexAttribDivisor(4 + i, 1);  
+        glVertexAttribDivisor(4 + i, 1);
     }
 
     VAO1->Unbind();

@@ -64,6 +64,18 @@
     <Filter Include="Source Files\Engine\graphics\data">
       <UniqueIdentifier>{6554055e-3cf7-4248-b0c1-922adc468640}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine\render\Renderers">
+      <UniqueIdentifier>{85910c9c-f267-4cfd-bb8f-1ee72f4fef1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\render\data">
+      <UniqueIdentifier>{224b2539-a3d2-4cda-916f-503687f9795d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\shaders\object_shader">
+      <UniqueIdentifier>{86df7662-103a-454d-814f-658d1bffd9ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\shaders\cubemap_shader">
+      <UniqueIdentifier>{f195819c-25f8-457e-9b8b-a85828da08dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\libraries\glad.c">
@@ -137,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="source\shapes\Rectangle.cpp">
       <Filter>Source Files\Engine\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="source\graphics\resources\CubeMap.cpp">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -263,9 +278,6 @@
     <ClInclude Include="source\graphics\resources\RenderMesh.h">
       <Filter>Source Files\Engine\graphics\resources</Filter>
     </ClInclude>
-    <ClInclude Include="source\graphics\resources\SkyBox.h">
-      <Filter>Source Files\Engine\graphics\resources</Filter>
-    </ClInclude>
     <ClInclude Include="source\graphics\resources\Texture.h">
       <Filter>Source Files\Engine\graphics\resources</Filter>
     </ClInclude>
@@ -302,14 +314,24 @@
     <ClInclude Include="source\graphics\data\ShaderData.h">
       <Filter>Source Files\Engine\graphics\data</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CopyFileToFolders Include="resource\Shaders\default.fragment">
-      <Filter>Resource Files\shaders</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="resource\Shaders\default.vertex">
-      <Filter>Resource Files\shaders</Filter>
-    </CopyFileToFolders>
+    <ClInclude Include="source\render\Renderers\RenderHandler.h">
+      <Filter>Source Files\Engine\render\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\data\RenderContext.h">
+      <Filter>Source Files\Engine\render\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\data\BatchMap.h">
+      <Filter>Source Files\Engine\render\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\data\ShaderType.h">
+      <Filter>Source Files\Engine\render\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\data\MeshBatch.h">
+      <Filter>Source Files\Engine\render\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\resources\CubeMap.h">
+      <Filter>Source Files\Engine\graphics\resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\textures\crate.jpg">
@@ -317,8 +339,20 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="resource\Shaders\default.geom">
-      <Filter>Resource Files\shaders</Filter>
+    <None Include="resource\shaders\object_shader\default.fragment">
+      <Filter>Resource Files\shaders\object_shader</Filter>
+    </None>
+    <None Include="resource\shaders\object_shader\default.geom">
+      <Filter>Resource Files\shaders\object_shader</Filter>
+    </None>
+    <None Include="resource\shaders\object_shader\default.vertex">
+      <Filter>Resource Files\shaders\object_shader</Filter>
+    </None>
+    <None Include="resource\shaders\cubemap_shader\default.fragment">
+      <Filter>Resource Files\shaders\cubemap_shader</Filter>
+    </None>
+    <None Include="resource\shaders\cubemap_shader\default.vertex">
+      <Filter>Resource Files\shaders\cubemap_shader</Filter>
     </None>
   </ItemGroup>
 </Project>

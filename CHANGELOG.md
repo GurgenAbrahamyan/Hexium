@@ -1,10 +1,11 @@
 # Changelog
 
-## [0.2.2] - 2026-02-06
+## [0.2.3] - 2026-02-08
 
 ### Added
-- Added Instanced Rendering (Handles ~60,000 rotating cubes at 60 FPS or ~3,000 duck models)
-- Bug Fixes
+- Cubemap support
+- Architectural improvements
+- Various bug fixes
 
 ### Known Issues
-- Collision detection not implemented
+- Collision detection not yet implemented

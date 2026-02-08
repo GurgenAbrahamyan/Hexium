@@ -8,19 +8,13 @@
 
 #include "Shader.h"
 #include "../../core/EventBus.h"
+#include "../data/ShaderType.h"
 
 // Forward declare events
 struct InitShader;
 struct GetDefaultShader;
 
 // Enum to classify shaders by usage
-enum class ShaderType {
-    OBJECT3D,
-    CUBEMAP,
-    LIGHT,
-    PARTICLE,
-    UNKNOWN
-};
 
 class ShaderManager {
 public:

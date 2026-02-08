@@ -25,14 +25,17 @@ Engine::Engine()
     keyboardInput(new KeyboardInput(bus)),
     mouseInput(new MouseInput(bus)),
     running(true),
+    renderContext ( new RenderContext()),
     accumulator(0.0f),
     framecount(0),
     framesThisSecond(0),
     timeSinceLastFpsPrint(0.0f)
 {
     window = EngineContext::get().getWindow();
+	
     scene->initObjects();
-	renderer->markBatchesDirty();
+	renderContext->camera = camera;
+	renderContext->scene = scene;
     
 
     
@@ -75,7 +78,7 @@ void Engine::run() {
 		
         mouseInput->proccessInput();
         ui->processInput();
-        renderer->render(scene, camera);
+        renderer->render(renderContext);
 
         glfwPollEvents();
 

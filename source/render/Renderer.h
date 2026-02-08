@@ -15,19 +15,12 @@
 #include "../render/RenderHelpers/ShaderManager.h"
 #include "../core/EventBus.h"
 
-struct MeshBatch {
-    RenderMesh* mesh;
-    std::vector<Mat4> instances;
+#include "data/BatchMap.h"
+#include "data/MeshBatch.h"
+#include "data/ShaderType.h"
+#include "data/RenderContext.h"
 
-    MeshBatch() {
-        instances.reserve(128); // Pre-allocate
-    }
-};
-
-using MeshBatchMap = std::unordered_map<RenderMesh*, MeshBatch>;
-using MaterialBatchMap = std::unordered_map<Material*, MeshBatchMap>;
-using ShaderBatchMap = std::unordered_map<Shader*, MaterialBatchMap>;
-
+#include "Renderers/RenderHandler.h"
 class Scene;
 class Camera;
 
@@ -36,21 +29,22 @@ public:
     Renderer(EventBus* bus);
     ~Renderer();
 
-    void render(Scene* scene, Camera* camera);
-    void render2(Scene* scene, Camera* camera);
+    void render(RenderContext* ctx);
+
 
     GLFWwindow* getWindow() const;
 
-    // Call this when objects are added/removed from scene
+    
     void markBatchesDirty() { batchesDirty = true; }
 
 private:
     GLFWwindow* window;
     UniformBuffer* globalUBO;
-    ShaderBatchMap renderBatches;
     ShaderManager* shaderManager;
     EventBus* bus;
-    Shader* shaderObj;
+    
+    std::unordered_map<ShaderType, std::unique_ptr<RenderHandler>> renderHandlers;
+
 
     bool batchesDirty;
 

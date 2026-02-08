@@ -13,23 +13,23 @@ class StaticMesh : public RenderMesh {
 public:
     StaticMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
     ~StaticMesh() override;
-
+    
     void bind() override;
     void setupBuffers() override;
     int indexCount() const override;
     void setColor(const Vector3& col) override;
-
+   
     void setupInstanceVBO(size_t maxInstances) override;
     GLuint getInstanceVBO() override;
-
+    
 private:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-
+    
     VAO* VAO1 = nullptr;
     VBO* VBO1 = nullptr;
     EBO* EBO1 = nullptr;
-
+    
     GLuint instanceVBO = 0;
     size_t instanceVBOCapacity = 0;
 };

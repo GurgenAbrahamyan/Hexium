@@ -90,3 +90,148 @@ TextureID TextureManager::getID(const std::string& path) const {
 void TextureManager::NextTexture(EventBus* bus) {
 
 }
+
+CubeMap* TextureManager::loadCubeMap(std::string filepath) {
+    // TO-DO: fix 
+    stbi_set_flip_vertically_on_load(false);
+
+    int w, h, ch;
+    unsigned char* data = stbi_load(filepath.c_str(), &w, &h, &ch, 0);
+    if (!data) {
+        std::cerr << "Failed to load cubemap\n";
+        return nullptr;
+    }
+
+    int faceSize = w / 4;
+    GLenum format = (ch == 4) ? GL_RGBA : GL_RGB;
+
+    unsigned int texID;
+    glGenTextures(1, &texID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
+
+    struct Face { GLenum target; int gx, gy; };
+    Face faceMap[6] = {
+        { GL_TEXTURE_CUBE_MAP_POSITIVE_X, 2, 1 },
+        { GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, 1 },
+        { GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 1, 0 },
+        { GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 1, 2 },
+        { GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 1, 1 },
+        { GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 3, 1 },
+    };
+
+    // Extract each face into contiguous memory
+    std::vector<unsigned char> faceData(faceSize * faceSize * ch);
+
+    for (auto& f : faceMap) {
+        // Copy row by row
+        for (int y = 0; y < faceSize; y++) {
+            unsigned char* srcRow = data + ((f.gy * faceSize + y) * w + f.gx * faceSize) * ch;
+            unsigned char* dstRow = faceData.data() + y * faceSize * ch;
+            memcpy(dstRow, srcRow, faceSize * ch);
+        }
+
+        glTexImage2D(f.target, 0, format, faceSize, faceSize, 0, format, GL_UNSIGNED_BYTE, faceData.data());
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+    stbi_image_free(data);
+
+    cubeMap = std::make_unique<CubeMap>();
+    cubeMap->setTexture(texID);
+
+    return cubeMap.get();
+}
+CubeMap* TextureManager::loadCubeMapArray(std::vector<std::string> filepaths) {
+    if (filepaths.size() != 6) {
+        std::cerr << "CubeMap requires exactly 6 faces, got " << filepaths.size() << std::endl;
+        return nullptr;
+    }
+
+    stbi_set_flip_vertically_on_load(false);
+
+    unsigned int texID;
+    glGenTextures(1, &texID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
+
+    // Order: +X, -X, +Y, -Y, +Z, -Z (right, left, top, bottom, front, back)
+    for (unsigned int i = 0; i < 6; i++) {
+        int width, height, channels;
+        unsigned char* data = stbi_load(filepaths[i].c_str(), &width, &height, &channels, 0);
+
+        if (!data) {
+            std::cerr << "Failed to load cubemap face: " << filepaths[i] << std::endl;
+            glDeleteTextures(1, &texID);
+            return nullptr;
+        }
+
+        GLenum format = (channels == 4) ? GL_RGBA : GL_RGB;
+
+        glTexImage2D(
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            0,
+            format,
+            width,
+            height,
+            0,
+            format,
+            GL_UNSIGNED_BYTE,
+            data
+        );
+
+        stbi_image_free(data);
+
+        std::cout << "Loaded cubemap face " << i << ": " << filepaths[i] << std::endl;
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+    cubeMap = std::make_unique<CubeMap>();
+    cubeMap->setTexture(texID);
+
+    return cubeMap.get();
+}
+
+CubeMap* TextureManager::loadCubeMapDebug() {
+    unsigned int texID;
+    glGenTextures(1, &texID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
+
+    // Solid colors: RED, GREEN, BLUE, YELLOW, MAGENTA, CYAN
+    unsigned char colors[6][3] = {
+        {255, 0, 0},   // +X = RED
+        {0, 255, 0},   // -X = GREEN
+        {0, 0, 255},   // +Y = BLUE
+        {255, 255, 0}, // -Y = YELLOW
+        {255, 0, 255}, // +Z = MAGENTA
+        {0, 255, 255}  // -Z = CYAN
+    };
+
+    for (int i = 0; i < 6; i++) {
+        unsigned char face[3];
+        memcpy(face, colors[i], 3);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, face);
+    }
+
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    cubeMap = std::make_unique<CubeMap>();
+    cubeMap->setTexture(texID);
+    return cubeMap.get();
+}

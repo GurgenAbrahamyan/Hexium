@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 #include "../resources/Texture.h"
-
+#include "../resources/CubeMap.h"
 using TextureID = uint32_t;
 
 class EventBus;
@@ -41,7 +41,13 @@ public:
 
     size_t getTextureCount() const { return textures.size(); }
 
+    CubeMap* loadCubeMap(std::string filePath);
+    CubeMap* loadCubeMapArray(std::vector<std::string> filepaths);
+    CubeMap* loadCubeMapDebug();
+
 private:
     std::vector<TextureRecord> textures;
     std::unordered_map<TextureKey, TextureID, TextureKeyHash> lookup;
+
+	std::unique_ptr<CubeMap> cubeMap;
 };
