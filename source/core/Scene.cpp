@@ -179,33 +179,71 @@ void Scene::initObjects() {
     
           
 
-      objects.push_back(new Rectangle(Vector3(3, 0, 0), Vector3(1, 1, 1)));
-      objects.push_back(new Rectangle(Vector3(0, 3, 0), Vector3(1, 1, 1)));
-      objects.push_back(new Rectangle(Vector3(0, 0, 3), Vector3(1, 1, 1)));
+      objects.push_back(new Rectangle(Vector3(5, 0, 0), Vector3(3, 3, 3)));
+      objects.push_back(new Rectangle(Vector3(0, 5, 0), Vector3(2, 2, 2)));
+      objects.push_back(new Rectangle(Vector3(0, 0, 5), Vector3(1, 1, 1)));
 
       objects.push_back(new Rectangle(Vector3(10, 0, 0), Vector3(1, 1, 1)));
+
+      objects.push_back(new Rectangle(Vector3(0, 0, 0), Vector3(500, 500, 1)));
 
    
 
 
 
 
-    Light* light1 = new Light(Vector3(1, 1, 1), Vector3(1,1, 1), 1.0f, LightType::Point);
-    
-	light1->setOwner(objects.at(0));
+      Light* light1 = new Light(Vector3(0, 0, 1), Vector3(5, 5, 8), 7.0f, LightType::Point);
+      
 
-    lights.push_back(light1);
+      lights.push_back(light1);
+
+      // Red light on the map
+      Light* light2 = new Light(Vector3(1, 0.2, 0.2), Vector3(10, 8, 5), 6.0f, LightType::Point);
+      light2->setOwner(objects.at(1));
+      lights.push_back(light2);
+
+      // Green light on the duck
+      Light* light3 = new Light(Vector3(0.2, 1, 0.2), Vector3(15, 8, 5), 7.0f, LightType::Point);
+      light3->setOwner(objects.at(2));
+      lights.push_back(light3);
+
+      // Blue light on the helmet
+      Light* light4 = new Light(Vector3(0.2, 0.5, 1), Vector3(20, 8, 5), 7.0f, LightType::Point);
+      light4->setOwner(objects.at(3));
+      lights.push_back(light4);
+
+      // Yellow light on the car
+      Light* light5 = new Light(Vector3(1, 1, 0.2), Vector3(25, 8, 5), 6.0f, LightType::Point);
+      light5->setOwner(objects.at(4));
+      lights.push_back(light5);
+
+      // Magenta light on the boombox
+      Light* light6 = new Light(Vector3(1, 0.2, 1), Vector3(30, 8, 5), 7.0f, LightType::Point);
+      light6->setOwner(objects.at(5));
+      lights.push_back(light6);
+
+      // Cyan light on the cannon
+      Light* light7 = new Light(Vector3(0.2, 1, 1), Vector3(35, 8, 5), 7.0f, LightType::Point);
+      light7->setOwner(objects.at(6));
+      lights.push_back(light7);
+
+      // Some static lights for fill lighting
+     /* Light* fillLight1 = new Light(Vector3(1, 0.9, 0.8), Vector3(0, 15, 0), 5.0f, LightType::Point);
+      lights.push_back(fillLight1);
+
+      Light* fillLight2 = new Light(Vector3(0.8, 0.9, 1), Vector3(20, 15, 10), 5.0f, LightType::Point);
+      lights.push_back(fillLight2);
+
+      // A strong white key light
+      Light* keyLight = new Light(Vector3(1, 1, 1), Vector3(15, 20, -10), 15.0f, LightType::Point);
+      lights.push_back(keyLight);*/
+
+      for (Object3D* obj : objects) {
+          obj->initializeGPU(textureManager);
+      }
+}
 
 
 
   
-
-
-
-    for (Object3D* obj : objects) {
-        
-        obj->initializeGPU(textureManager);
-       
-    }
-}
 

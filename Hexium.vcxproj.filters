@@ -332,6 +332,15 @@
     <ClInclude Include="source\graphics\resources\CubeMap.h">
       <Filter>Source Files\Engine\graphics\resources</Filter>
     </ClInclude>
+    <ClInclude Include="source\graphics\data\TextureType.h">
+      <Filter>Source Files\Engine\graphics\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\graphics\data\MaterialTextureInfo.h">
+      <Filter>Source Files\Engine\graphics\data</Filter>
+    </ClInclude>
+    <ClInclude Include="source\render\data\GPULight.h">
+      <Filter>Source Files\Engine\render\data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\textures\crate.jpg">

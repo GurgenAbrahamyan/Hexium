@@ -4,8 +4,7 @@
 #include "../data/MaterialData.h"
 #include "../../core/EventBus.h"
 #include "../../core/Event.h"
-
-
+#include "../data/MaterialData.h"
 
 #include <iostream>
 
@@ -15,24 +14,18 @@ MaterialManager::MaterialManager(TextureManager* texMgr, EventBus* bus)
     bus->subscribe<InitMaterial>([this](InitMaterial& event) {
         const MaterialData* matData = event.data;
         this->addMaterial(
-            matData->name,
-            matData->texturePaths,
-            matData->metallic,
-            matData->roughness,
-            matData->ao
+            *matData
         );
 		event.result = this->getMaterial(this->getMaterialID(matData->name));
 		});
 
 }
 
-int MaterialManager::addMaterial(const std::string& name,
-    const std::vector<std::string>& texturePaths,
-    float metallic,
-    float roughness,
-    float ao)
+int MaterialManager::addMaterial(const MaterialData& materialData)
 {
-    // Check if material already exists
+    const std::string& name = materialData.name;
+    const std::vector<MaterialTextureInfo>& textures = materialData.textureInfo;
+
     if (auto it = nameToIDMap.find(name); it != nameToIDMap.end()) {
         std::cout << "Material already exists: " << name << " (ID: " << it->second << ")\n";
         return it->second;
@@ -42,53 +35,58 @@ int MaterialManager::addMaterial(const std::string& name,
     auto mat = std::make_unique<Material>();
 
     std::cout << "Creating material: " << name << " (ID: " << id << ")\n";
-    std::cout << "  Texture paths provided: " << texturePaths.size() << "\n";
+    std::cout << "  Textures provided: " << textures.size() << "\n";
 
-
-
-    for (size_t i = 0; i < texturePaths.size() && i < static_cast<size_t>(TextureSlot::MAX_SLOTS); ++i) {
-        const std::string& texPath = texturePaths[i];
-
-        if (texPath.empty()) {
-            std::cout << "  Slot " << i << ": EMPTY (skipped)\n";
+    for (const auto& texInfo : textures)
+    {
+        if (texInfo.path.empty()) {
+            std::cout << "  Texture " << static_cast<int>(texInfo.type) << ": EMPTY (skipped)\n";
             continue;
         }
 
-        // Load texture and get Texture pointer
-        uint32_t texID = textureManager->addTexture(texPath);
+       
+        uint32_t texID = textureManager->addTexture(texInfo.path, texInfo.type);
         if (texID == UINT32_MAX) {
-            std::cerr << "  Slot " << i << ": FAILED to load " << texPath << "\n";
+            std::cerr << "  Failed to load texture: " << texInfo.path << "\n";
             continue;
         }
 
         Texture* tex = textureManager->getTexture(texID);
         if (!tex) {
-            std::cerr << "  Slot " << i << ": Retrieved null texture for ID " << texID << "\n";
+            std::cerr << "  Retrieved null texture for ID " << texID << "\n";
             continue;
         }
 
-        mat->SetTexture(i, tex);
-
-        // Print what we're assigning
-        std::string slotName = "UNKNOWN";
-        switch (i) {
-        case 0: slotName = "BASE_COLOR"; break;
-        case 1: slotName = "METALLIC_ROUGHNESS"; break;
-        case 2: slotName = "NORMAL_MAP"; break;
-        case 3: slotName = "OCCLUSION"; break;
-        case 4: slotName = "EMISSIVE"; break;
+        
+        int slot = static_cast<int>(TextureSlot::MAX_SLOTS); // default invalid
+        switch (texInfo.type) {
+        case TextureType::Albedo:         slot = static_cast<int>(TextureSlot::BASE_COLOR); break;
+        case TextureType::Normal:         slot = static_cast<int>(TextureSlot::NORMAL_MAP); break;
+        case TextureType::Metallic:  slot = static_cast<int>(TextureSlot::METALLIC_ROUGHNESS); break;
+        case TextureType::AO:             slot = static_cast<int>(TextureSlot::OCCLUSION); break;
+        case TextureType::Emissive:       slot = static_cast<int>(TextureSlot::EMISSIVE); break;
         }
 
-        std::cout << "  Slot " << i << " (" << slotName << "): " << texPath << " [TexID: " << texID << "]\n";
+        if (slot >= 0 && slot < static_cast<int>(TextureSlot::MAX_SLOTS))
+        {
+            mat->SetTexture(slot, tex);
+            std::cout << "  Slot " << slot << " (" << texInfo.path << ") assigned\n";
+        }
+        else
+        {
+            std::cerr << "  Unknown texture type for path: " << texInfo.path << "\n";
+        }
     }
 
-
-    mat->metallic = metallic;
-    mat->roughness = roughness;
-    mat->ao = ao;
+    
+    mat->metallic = materialData.metallic;
+    mat->roughness = materialData.roughness;
+    mat->ao = materialData.ao;
     mat->setID(id);
 
-    std::cout << "  Properties: Metallic=" << metallic << ", Roughness=" << roughness << ", AO=" << ao << "\n";
+    std::cout << "  Properties: Metallic=" << mat->metallic
+        << ", Roughness=" << mat->roughness
+        << ", AO=" << mat->ao << "\n";
 
     idMap[id] = std::move(mat);
     nameToIDMap[name] = id;
@@ -96,6 +94,7 @@ int MaterialManager::addMaterial(const std::string& name,
     std::cout << "Material created successfully!\n";
     return id;
 }
+
 
 Material* MaterialManager::getMaterial(int id) {
     if (auto it = idMap.find(id); it != idMap.end())

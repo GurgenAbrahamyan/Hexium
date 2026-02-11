@@ -39,7 +39,7 @@ public:
 
 private:
     GLFWwindow* window;
-    UniformBuffer* globalUBO;
+   
     ShaderManager* shaderManager;
     EventBus* bus;
     

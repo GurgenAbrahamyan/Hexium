@@ -7,7 +7,7 @@
 class Material;
 class EventBus;
 class TextureManager;
-
+struct MaterialData;
 // Define standard texture slot indices
 enum class TextureSlot {
     BASE_COLOR = 0,
@@ -22,11 +22,7 @@ class MaterialManager {
 public:
     MaterialManager(TextureManager* texMgr, EventBus* bus);
 
-    int addMaterial(const std::string& name,
-        const std::vector<std::string>& texturePaths,
-        float metallic = 0.0f,
-        float roughness = 1.0f,
-        float ao = 1.0f);
+    int addMaterial(const MaterialData& materialData);
 
     Material* getMaterial(int id);
     int getMaterialID(const std::string& name);

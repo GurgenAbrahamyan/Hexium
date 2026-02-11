@@ -7,9 +7,9 @@
 #include <vector>
 
 enum class LightType {
-    Point,
-    Spot,
-    Directional
+    Point = 0,
+    Spot = 2,
+    Directional = 1
 };
 
 class Light {
@@ -21,7 +21,10 @@ private:
     
     Vector3 color = Vector3(1, 1, 1);
 	Vector3 pos = Vector3(0, 0, 0);
+    Vector3 direction = Vector3(0, 0, -1);  
     float intensity = 1.0f;
+    float innerConeAngle = 12.5f;  
+    float outerConeAngle = 17.5f;
 
 
 
@@ -48,6 +51,33 @@ public:
         return final;
 
         return final;
+    }
+
+    Vector3 getDirection() const {
+        if (!owner) return direction;
+
+        
+        Matrix3 invRot = owner->getOrientation().transpose();
+        return (invRot * direction).normalize();
+    }
+
+  
+    float getInnerCone() const {
+        return cos(innerConeAngle * 3.14159f / 180.0f);
+    }
+
+    float getOuterCone() const {
+        return cos(outerConeAngle * 3.14159f / 180.0f);
+    }
+
+  
+    void setDirection(const Vector3& dir) {
+        direction = dir.normalize();
+    }
+
+    void setConeAngles(float inner, float outer) {
+        innerConeAngle = inner;
+        outerConeAngle = outer;
     }
 
     

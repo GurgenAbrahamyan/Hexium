@@ -22,8 +22,10 @@ Renderer::Renderer(EventBus* bus)
         return;
     }
 
+    int samples = 8;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_SAMPLES, samples);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     window = glfwCreateWindow(
@@ -58,6 +60,12 @@ Renderer::Renderer(EventBus* bus)
             ShaderType::OBJECT3D
         )
     );
+
+    Shader* objShader = shaderManager->getShader("default");
+    objShader->Activate();
+    GLuint blockIndex = glGetUniformBlockIndex(objShader->ID, "LightBlock");
+    glUniformBlockBinding(objShader->ID, blockIndex, 1);
+
     renderHandlers[ShaderType::CUBEMAP] = std::make_unique<CubeMapRenderer>(
         shaderManager->load(
             "default_cubemap",
@@ -69,9 +77,10 @@ Renderer::Renderer(EventBus* bus)
     );
 
 
-    globalUBO = new UniformBuffer(sizeof(GlobalUBOData), 0);
+   
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_FRAMEBUFFER_SRGB);
     glDepthFunc(GL_LESS);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -80,7 +89,7 @@ Renderer::Renderer(EventBus* bus)
 }
 
 Renderer::~Renderer() {
-    delete globalUBO;
+   
     delete shaderManager;
 
     if (window) {
@@ -98,6 +107,7 @@ Renderer::~Renderer() {
 
     void Renderer::render(RenderContext* ctx) {
         // Clear frame
+        glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         

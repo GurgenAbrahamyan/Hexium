@@ -1,11 +1,12 @@
 # Changelog
 
-## [0.2.3] - 2026-02-08
+## [0.2.4] - 2026-02-11
 
 ### Added
-- Cubemap support
+- Gamma Correction
 - Architectural improvements
-- Various bug fixes
+- Support for multiple lights
+- Dynamic light type handling
 
 ### Known Issues
 - Collision detection not yet implemented

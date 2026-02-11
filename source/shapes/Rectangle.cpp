@@ -115,8 +115,8 @@ void Rectangle::createSharedMesh() {
 void Rectangle::initializeGPU(TextureManager* manager) {
     // Only initialize GPU resources once for all rectangles
     if (!gpuInitialized) {
-        sharedMaterial->SetTexture(0, manager->getTexture(manager->addTexture("resource/textures/brick_wall.jpg")));
-        sharedMaterial->SetTexture(1, manager->getTexture(manager->addTexture("resource/textures/brick_wall_specular.png")));
+        sharedMaterial->SetTexture(0, manager->getTexture(manager->addTexture("resource/textures/brick_wall.jpg", TextureType::Albedo)));
+        sharedMaterial->SetTexture(1, manager->getTexture(manager->addTexture("resource/textures/brick_wall_specular.png", TextureType::Normal)));
         sharedMesh->setupBuffers();
         gpuInitialized = true;
     }

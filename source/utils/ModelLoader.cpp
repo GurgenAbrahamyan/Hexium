@@ -11,7 +11,7 @@
 #include "../math_custom/Quat.h"
 #include "math.h"
 #include "../math_custom/GLAdapter.h"
-
+#include "../graphics/data/MaterialTextureInfo.h"
 
 
 // ---------------- Constructor ----------------
@@ -201,7 +201,7 @@ void ModelLoader::parseMaterial(unsigned int materialIndex)
             unsigned int imgIndex = JSON["textures"][texIndex]["source"];
             std::string uri = JSON["images"][imgIndex]["uri"];
             std::cout << "  Base Color Texture: " << uri << "\n";
-            mat.texturePaths.push_back(directory + uri);
+            mat.textureInfo.push_back({ directory + uri, TextureType::Albedo});
         }
 
         // Parse metallic/roughness texture (ARM - Ambient Occlusion, Roughness, Metallic)
@@ -211,7 +211,7 @@ void ModelLoader::parseMaterial(unsigned int materialIndex)
             unsigned int imgIndex = JSON["textures"][texIndex]["source"];
             std::string uri = JSON["images"][imgIndex]["uri"];
             std::cout << "  Metallic/Roughness Texture (ARM): " << uri << "\n";
-            mat.texturePaths.push_back(directory + uri);
+            mat.textureInfo.push_back({ directory + uri, TextureType::Metallic});
         }
     }
 
@@ -222,7 +222,7 @@ void ModelLoader::parseMaterial(unsigned int materialIndex)
         unsigned int imgIndex = JSON["textures"][texIndex]["source"];
         std::string uri = JSON["images"][imgIndex]["uri"];
         std::cout << "  Normal Map: " << uri << "\n";
-        mat.texturePaths.push_back(directory + uri);
+        mat.textureInfo.push_back({ directory + uri, TextureType::Normal });
     }
 
     // Optional: Parse occlusion texture
@@ -232,7 +232,7 @@ void ModelLoader::parseMaterial(unsigned int materialIndex)
         unsigned int imgIndex = JSON["textures"][texIndex]["source"];
         std::string uri = JSON["images"][imgIndex]["uri"];
         std::cout << "  Occlusion Texture: " << uri << "\n";
-        mat.texturePaths.push_back(directory + uri);
+        mat.textureInfo.push_back({ directory + uri, TextureType::AO });
     }
 
     // Optional: Parse emissive texture
@@ -242,7 +242,7 @@ void ModelLoader::parseMaterial(unsigned int materialIndex)
         unsigned int imgIndex = JSON["textures"][texIndex]["source"];
         std::string uri = JSON["images"][imgIndex]["uri"];
         std::cout << "  Emissive Texture: " << uri << "\n";
-        mat.texturePaths.push_back(directory + uri);
+        mat.textureInfo.push_back({ directory + uri, TextureType::Emissive });
     }
 
     model.materials.push_back(mat);

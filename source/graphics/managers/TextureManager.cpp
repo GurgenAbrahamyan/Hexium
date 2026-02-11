@@ -4,7 +4,7 @@
 #include "../../core/Event.h"
 #include "../../core/EventBus.h"
 
-TextureID TextureManager::addTexture(const std::string& path)
+TextureID TextureManager::addTexture(const std::string& path,const TextureType& type)
 {
     TextureKey key{ path };
 
@@ -32,16 +32,17 @@ TextureID TextureManager::addTexture(const std::string& path)
     // Choose correct format based on actual channels
     GLenum format = GL_RGBA;
     GLenum internal = GL_RGBA8;
+  
 
     if (channels == 3)
     {
         format = GL_RGB;
-        internal = GL_RGB8;
+        internal = isSRGB(type) ? GL_SRGB8 : GL_RGB8;
     }
     else if (channels == 4)
     {
         format = GL_RGBA;
-        internal = GL_RGBA8;
+        internal = isSRGB(type) ? GL_SRGB8_ALPHA8 : GL_RGBA8;
     }
     else if (channels == 1)
     {
@@ -55,16 +56,18 @@ TextureID TextureManager::addTexture(const std::string& path)
         return UINT32_MAX;
     }
 
+
     TextureDesc desc;
     desc.internalFormat = internal;
     desc.format = format;
+    
 
     auto tex = std::make_unique<Texture>(width, height, data, desc);
     stbi_image_free(data);
 
-    // Use vector size as ID
+
     TextureID id = static_cast<TextureID>(textures.size());
-    textures.push_back({ std::move(tex), path });
+    textures.push_back({ std::move(tex), path, type });
     lookup[key] = id;
 
     std::cout << "Texture loaded successfully (ID: " << id << ")\n";
@@ -89,6 +92,16 @@ TextureID TextureManager::getID(const std::string& path) const {
 
 void TextureManager::NextTexture(EventBus* bus) {
 
+}
+
+bool TextureManager::isSRGB(TextureType type) const {
+
+    switch (type) {
+    case TextureType::Albedo:
+        return true;
+    default:
+        return false;
+    }
 }
 
 CubeMap* TextureManager::loadCubeMap(std::string filepath) {
@@ -161,7 +174,6 @@ CubeMap* TextureManager::loadCubeMapArray(std::vector<std::string> filepaths) {
     glGenTextures(1, &texID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 
-    // Order: +X, -X, +Y, -Y, +Z, -Z (right, left, top, bottom, front, back)
     for (unsigned int i = 0; i < 6; i++) {
         int width, height, channels;
         unsigned char* data = stbi_load(filepaths[i].c_str(), &width, &height, &channels, 0);
@@ -173,11 +185,12 @@ CubeMap* TextureManager::loadCubeMapArray(std::vector<std::string> filepaths) {
         }
 
         GLenum format = (channels == 4) ? GL_RGBA : GL_RGB;
+        GLenum internalFormat = (channels == 4) ? GL_RGBA8 : GL_RGB8; // linear
 
         glTexImage2D(
             GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
             0,
-            format,
+            internalFormat,
             width,
             height,
             0,
@@ -203,6 +216,7 @@ CubeMap* TextureManager::loadCubeMapArray(std::vector<std::string> filepaths) {
 
     return cubeMap.get();
 }
+
 
 CubeMap* TextureManager::loadCubeMapDebug() {
     unsigned int texID;
