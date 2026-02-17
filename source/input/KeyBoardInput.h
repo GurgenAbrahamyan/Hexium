@@ -6,7 +6,7 @@
 #include "../core/EventBus.h"
 #include "../core/Event.h"
 #include "../core/EngineContext.h"
-#include "../shapes/Rectangle.h"
+
 class KeyboardInput {
 
 public:

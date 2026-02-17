@@ -1,12 +1,11 @@
 # Changelog
 
-## [0.2.4] - 2026-02-11
+## [0.3.0] - 2026-02-17
 
 ### Added
-- Gamma Correction
-- Architectural improvements
-- Support for multiple lights
-- Dynamic light type handling
+- Integration of Entity-Component-System (ECS) architecture (future enhancements planned)
+- General architectural improvements
+- Updated project file structure
 
 ### Known Issues
 - Collision detection not yet implemented

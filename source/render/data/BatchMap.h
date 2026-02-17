@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
-#include "../../graphics/resources/RenderMesh.h"
-#include "../../graphics/resources/Material.h"
+#include "../../resources/assets/RenderMesh.h"
+#include "../../resources/assets/Material.h"
 #include "../data/ShaderType.h"
 #include "../data/MeshBatch.h"
 using MeshBatchMap = std::unordered_map<RenderMesh*, MeshBatch>;

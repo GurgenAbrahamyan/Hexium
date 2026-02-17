@@ -7,5 +7,6 @@ uniform samplerCube skybox;
 
 void main()
 {    
-    FragColor = texture(skybox, texCoords);
+    float specular = 0.5f;
+    FragColor = texture(skybox, texCoords)*specular;
 }

@@ -1,9 +1,6 @@
 #include "Renderer.h"
 #include "../math_custom/GLAdapter.h"
-#include "../render/GlobalUniformBuffer.h"
-#include "../graphics/data/GlobalUBOData.h"
-#include "../core/Scene.h"
-#include "Camera.h"
+
 
 
 
@@ -12,8 +9,8 @@ using namespace GLAdapter;
 Renderer::Renderer(EventBus* bus)
     : window(nullptr),
     bus(bus),
-    shaderManager(nullptr),
-    batchesDirty(true)
+    shaderManager(nullptr)
+  
 {
     shaderManager = new ShaderManager(bus);
 
@@ -81,6 +78,7 @@ Renderer::Renderer(EventBus* bus)
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_FRAMEBUFFER_SRGB);
+	
     glDepthFunc(GL_LESS);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

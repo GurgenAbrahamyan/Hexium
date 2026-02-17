@@ -6,7 +6,6 @@
 
 class EventBus;
 class Scene;
-class Camera;
 class Renderer;
 class PhysicsEngine;
 class UiInput;
@@ -14,6 +13,7 @@ class UiRender;
 class MouseInput;
 class KeyboardInput;
 class GLFWwindow;
+class CameraSystem;
 struct RenderContext;
 
 class Engine {
@@ -28,13 +28,13 @@ public:
 private:
     EventBus* bus;
     Scene* scene;
-    Camera* camera;
     Renderer* renderer;
     PhysicsEngine* physicsEngine;
     UiInput* ui;
     UiRender* uiRender;
     MouseInput* mouseInput;
     KeyboardInput* keyboardInput;
+    CameraSystem* cameraSystem;
 
 	RenderContext* renderContext;
     GLFWwindow* window;

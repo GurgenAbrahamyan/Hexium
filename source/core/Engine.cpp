@@ -2,14 +2,14 @@
 
 
 #include "EventBus.h"
-#include "Scene.h"
+#include "../scene/Scene.h"
 #include "../render/Renderer.h"
-#include "PhysicsEngine.h"
-#include "../render/UiRender.h"
+#include "../physics/PhysicsEngine.h"
+#include "../render/handlers/UiRender.h"
 #include "../input/UIInput.h"
 #include "../input/KeyboardInput.h"
+#include "ecs_systems/CameraSystem.h"
 
-#include "../render/camera.h"
 #include "../input/MouseInput.h"
 #include "EngineContext.h"
 
@@ -17,9 +17,8 @@
 Engine::Engine()
     : bus(new EventBus()),
     scene(new Scene(bus)),
-    camera(new Camera(bus)),
     renderer(new Renderer(bus)),
-    physicsEngine(new PhysicsEngine(scene->objectList())),
+    physicsEngine(new PhysicsEngine()),
     ui(new UiInput(bus)),
     uiRender(new UiRender()),
     keyboardInput(new KeyboardInput(bus)),
@@ -29,13 +28,13 @@ Engine::Engine()
     accumulator(0.0f),
     framecount(0),
     framesThisSecond(0),
-    timeSinceLastFpsPrint(0.0f)
+    timeSinceLastFpsPrint(0.0f),
+    cameraSystem(new CameraSystem (bus, scene->getRegistry()))
 {
     window = EngineContext::get().getWindow();
 	
     scene->initObjects();
-	renderContext->camera = camera;
-	renderContext->scene = scene;
+	renderContext->registry = &scene->getRegistry();
     
 
     
@@ -68,14 +67,14 @@ void Engine::run() {
 
         while (accumulator >= PHYSICS_STEP) {
             
-            physicsEngine->update(PHYSICS_STEP);
+            physicsEngine->update(scene->getRegistry(), PHYSICS_STEP);
             accumulator -= PHYSICS_STEP;
         }
 
         EngineContext::get().deltaTime = frameTime;
 
         keyboardInput->processInput();
-		
+        cameraSystem->update(scene->getRegistry(), frameTime);
         mouseInput->proccessInput();
         ui->processInput();
         renderer->render(renderContext);

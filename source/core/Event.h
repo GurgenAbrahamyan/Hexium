@@ -2,6 +2,7 @@
 
 
 #include "../math_custom/Vector3.h"
+
 #include <string.h>
 class MaterialData;
 class MeshData;

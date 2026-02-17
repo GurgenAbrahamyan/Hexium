@@ -1,5 +1,5 @@
 #pragma once
-#include "../../graphics/resources/RenderMesh.h"
+#include "../../resources/assets/RenderMesh.h"
 struct MeshBatch {
     RenderMesh* mesh;
     std::vector<Mat4> instances;
